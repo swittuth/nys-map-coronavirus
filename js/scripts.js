@@ -17,7 +17,7 @@ map.on('load', () => {
         'type': 'fill',
         'paint': {
             'fill-color': "grey",
-            'fill-opacity': 0.8
+            'fill-opacity': 0.7
         },
         'source': 'nys-counties'
     });
@@ -29,5 +29,8 @@ map.on('load', () => {
             'line-color': 'coral'
         },
         'source': 'nys-counties'
-    })
+    });
+
+    map.setPaintProperty('nys-counties-fill-layer', 'fill-color',
+    ["match", ["get", "name"], layer.value, '#fbb03b'], '#ccc');
 });
