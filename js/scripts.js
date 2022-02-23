@@ -43,7 +43,6 @@ map.on('load', () => {
 
     map.on('mousemove', 'nys-counties-fill-layer', (e) => {
         
-        console.log(e.features["0"].properties.NAME);
     });
 
     map.on('mouseenter', 'nys-counties-fill-layer', () => {
