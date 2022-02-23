@@ -1,7 +1,7 @@
 mapboxgl.accessToken = 'pk.eyJ1Ijoic3dpdHR1dGgiLCJhIjoiY2t6aGZzcjZ1MDNucjJ1bnlpbGVjMHozNSJ9.wP4jf_xQ5-IDXtzRc2ECpA';
 const map = new mapboxgl.Map({
     container: 'map',
-    style: 'mapbox://styles/mapbox/light-v10',
+    style: 'mapbox://styles/mapbox/dark-v10',
     center: [-96, 37.8],
     zoom: 3
 });
@@ -17,7 +17,7 @@ map.on('load', () => {
         'type': 'fill',
         'paint': {
             'fill-color': "grey",
-            'fill-opacity': 0.7
+            'fill-opacity': 0.9
         },
         'source': 'nys-counties'
     });
@@ -37,6 +37,7 @@ map.on('load', () => {
         'source': 'nys-counties',
         'layout': {
             'text-field': ['get', 'NAME'],
+            
         }
     })
     
