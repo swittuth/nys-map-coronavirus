@@ -31,6 +31,13 @@ map.on('load', () => {
         'source': 'nys-counties'
     });
 
-    map.setPaintProperty('nys-counties-fill-layer', 'fill-color',
-    ["match", ["get", "name"], layer.value, '#fbb03b'], '#ccc');
+    map.addLayer({
+        'id': 'nys-counties-name-layer',
+        'type': 'symbol',
+        'source': 'nys-counties',
+        'layout': {
+            'text-field': ['get', 'NAME'],
+        }
+    })
+    
 });
