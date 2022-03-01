@@ -10,11 +10,9 @@ let hoveredStateId = null;
 map.on('load', () => {
     map.addSource('nys-counties', {
         type: "geojson",
-        data: "./nys_counties.geojson"
+        data: "./nys_counties_id.geojson"
     });
 
-
-    console.log("./nys_counties.geojson");
 
     map.addLayer({
         'id': 'nys-counties-fill-layer',
@@ -61,8 +59,7 @@ map.on('load', () => {
                     { hover: false }
                 );
             }
-            hoveredStateId = parseInt(e.features[0].properties['GNIS_ID']);
-            console.log(hoveredStateId)
+            hoveredStateId = e.features[0].id;
             map.setFeatureState(
                 { source: 'nys-counties', id: hoveredStateId },
                 { hover: true },

@@ -9,11 +9,11 @@ def main():
 
     while line != "":
         if substring in line:
-            templine = f', "id":{count}, '
+            templine = f', "id": "{count}", '
             count += 1
             id_file.write(line[:line.find(',')])
             id_file.write(templine)
-            id_file.writelines(line[line.find("properties"):])
+            id_file.writelines(line[line.find("properties") - 1:])
         else:
             id_file.writelines(line)
         line = geojson_file.readline()
