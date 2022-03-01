@@ -3,7 +3,7 @@ const map = new mapboxgl.Map({
     container: 'map',
     style: 'mapbox://styles/mapbox/dark-v10',
     center: [-75.690308,42.682435],
-    zoom: 5.6
+    zoom: 5.8
 });
 let hoveredStateId = null;
 
@@ -25,8 +25,9 @@ map.on('load', () => {
                 'case',
                 ['boolean', ['feature-state', 'hover'], false], 
                 1, 
-                0.2
-            ]
+                0.3
+            ],
+            'fill-outline-color': 'coral'
         },
     });
 
@@ -37,7 +38,10 @@ map.on('load', () => {
         'layout': {},
         'paint': {
             'line-color': '#627BC1',
-            'line-width': 0.5
+            'line-width': 1,
+            'line-dasharray': [1, 1],
+            'line-opacity': 0.5,
+
         },
     });
 
@@ -46,10 +50,12 @@ map.on('load', () => {
         'type': 'symbol',
         'source': 'nys-counties',
         'layout': {
-            'text-field': ['get', 'ABBREV'],
-
+            'text-field': ['format', ['upcase',['get', 'ABBREV']], {'font-scale': 0.6}],
+            'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'],
         }
-    })
+    });
+
+    
 
     map.on("mousemove", 'nys-counties-fill-layer', (e) => {
         if (e.features.length > 0) {
@@ -65,7 +71,7 @@ map.on('load', () => {
                 { hover: true },
             );
         }
-    })
+    });
 
     map.on('mouseleave', 'nys-counties-fill-layer', () => {
         if (hoveredStateId !== null) {
