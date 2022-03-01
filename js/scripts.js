@@ -5,6 +5,7 @@ const map = new mapboxgl.Map({
     center: [-75.690308,42.682435],
     zoom: 5.6
 });
+let hoveredStateId = null;
 
 map.on('load', () => {
     map.addSource('nys-counties', {
@@ -12,23 +13,34 @@ map.on('load', () => {
         data: "./nys_counties.geojson"
     });
 
+
+    console.log("./nys_counties.geojson");
+
     map.addLayer({
         'id': 'nys-counties-fill-layer',
         'type': 'fill',
+        'source': 'nys-counties',
+        'layout': {},
         'paint': {
-            'fill-color': "grey",
-            'fill-opacity': 0.3
+            'fill-color': '#627BC1',
+            'fill-opacity': [
+                'case',
+                ['boolean', ['feature-state', 'hover'], false], 
+                1, 
+                0.2
+            ]
         },
-        'source': 'nys-counties'
     });
 
     map.addLayer({
         'id': 'nys-counties-line-layer',
         'type': 'line', 
+        'source': 'nys-counties',
+        'layout': {},
         'paint': {
-            'line-color': 'coral'
+            'line-color': '#627BC1',
+            'line-width': 0.5
         },
-        'source': 'nys-counties'
     });
 
     map.addLayer({
@@ -36,30 +48,38 @@ map.on('load', () => {
         'type': 'symbol',
         'source': 'nys-counties',
         'layout': {
-            'text-field': ['get', 'NAME'],
+            'text-field': ['get', 'ABBREV'],
 
         }
     })
 
-    map.on('mousemove', 'nys-counties-fill-layer', (e) => {
-        
-    });
-
-    map.on('mouseenter', 'nys-counties-fill-layer', () => {
-        map.getCanvas().style.cursor = 'pointer';
-    });
-
-    map.on('mouseout', 'nys-counties-fill-layer', () => {
-        map.getCanvas().style.cursor = 'grab';
+    map.on("mousemove", 'nys-counties-fill-layer', (e) => {
+        if (e.features.length > 0) {
+            if (hoveredStateId !== null) {
+                map.setFeatureState(
+                    { source: 'nys-counties', id: hoveredStateId },
+                    { hover: false }
+                );
+            }
+            hoveredStateId = parseInt(e.features[0].properties['GNIS_ID']);
+            console.log(hoveredStateId)
+            map.setFeatureState(
+                { source: 'nys-counties', id: hoveredStateId },
+                { hover: true },
+            );
+        }
     })
 
-    map.on('mouseup', 'nys-counties-fill-layer', () => {
-        map.getCanvas().style.cursor = 'grab';
+    map.on('mouseleave', 'nys-counties-fill-layer', () => {
+        if (hoveredStateId !== null) {
+            map.setFeatureState(
+                { source: 'nys-counties', id: hoveredStateId },
+                { hover: false }
+            );
+        }
+        hoveredStateId = null;
     });
 
-    map.on('mousedown', () => {
-        map.getCanvas().style.cursor = 'grabbing';
-    })
 });
 
 // ["point", "lngLat", "originalEvent", 
