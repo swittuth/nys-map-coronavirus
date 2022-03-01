@@ -55,8 +55,6 @@ map.on('load', () => {
         }
     });
 
-    
-
     map.on("mousemove", 'nys-counties-fill-layer', (e) => {
         if (e.features.length > 0) {
             if (hoveredStateId !== null) {
