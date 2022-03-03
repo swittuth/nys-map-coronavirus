@@ -8,7 +8,7 @@ const map = new mapboxgl.Map({
 let hoveredStateId = null;
 
 // promise that contains data on covid
-const covid_data_promise = fetch("covid_data.json").then(e => e.json());
+const covid_data_promise = fetch("covid_data_adjusted.json").then(e => e.json());
 
 
 const state_list = ['Albany', 'Allegany', 'Bronx', 'Broome', 'Cattaraugus', 'Cayuga', 'Chautauqua', 'Chemung', 'Chenango', 
@@ -36,39 +36,41 @@ map.on('load', () => {
     covid_data_promise.then(data => { // array of of objects with time 
         const county_year_cases = {};
 
-        let current_county = ''
+        let current_county = '';
         let total_positive = 0;
         let last_county = data[0]['County'];
-        let update = false;
+        let selected_year = 2020;
 
         for (let i = 0; i < data.length; i++){
             let year = parseInt(data[i]["Test Date"].split('/')[2]);
-            current_county = data[i]['County'];
+            if (year === selected_year){
+                current_county = data[i]['County'];
+                
+                if (i > 0){
+                    last_county = data[i - 1]['County'];
+                }
+                if (current_county !== last_county){
+                    county_year_cases[last_county] = total_positive;
+                    total_positive = 0;
+                }
 
-            if (current_county != last_county){
-                total_positive = 0;
-                update = !update; // because a new county has emerged - set back to false again
-            }
-
-
-            last_county = data[i]['County'];
-            if (year === 2020){
                 total_positive += data[i]["New Positives"];
-            }
-            else if (!update){
-                county_year_cases[current_county] = total_positive;
-                update = !update;
             }
             else {
                 continue;
             }
+            county_year_cases[current_county] = total_positive; // to account for the last county: Yates
         }
+        console.log(county_year_cases);
 
         const matchExpression = ['match', ['get', 'NAME']];
         for (const key in county_year_cases){
             let redness;
 
-            if (county_year_cases[key] < 10000){
+            if (county_year_cases[key] < 30){
+                redness = 0;
+            }
+            else if (county_year_cases[key] < 10000){
                 redness = 50;
             }
             else if (county_year_cases[key] < 30000){
@@ -83,12 +85,10 @@ map.on('load', () => {
             else {
                 redness = 250;
             }
-            let color = `rgba(${redness}, ${1}, ${1}, ${1})`
+            let color = `rgba(${redness}, ${10}, ${10}, ${0.5})`
             matchExpression.push(key, color)
         }
         matchExpression.push('rgba(0, 0, 0, 0)');
-
-        console.log(matchExpression);
 
         map.addLayer({
             'id': 'nys-counties-fill-layer',
