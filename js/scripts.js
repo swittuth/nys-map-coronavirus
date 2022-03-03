@@ -9,6 +9,8 @@ let hoveredStateId = null;
 
 // promise that contains data on covid
 const covid_data_promise = fetch("covid_data.json").then(e => e.json());
+
+
 const state_list = ['Albany', 'Allegany', 'Bronx', 'Broome', 'Cattaraugus', 'Cayuga', 'Chautauqua', 'Chemung', 'Chenango', 
                     'Clinton', 'Columbia', 'Cortland', 'Delaware', 'Dutchess', 'Erie', 'Essex', 'Franklin', 'Fulton', 'Genesee', 
                     'Greene', 'Hamilton', 'Herkimer', 'Jefferson', 'Kings', 'Lewis', 'Livingston', 'Madison', 'Monroe', 'Montgomery', 
@@ -16,6 +18,7 @@ const state_list = ['Albany', 'Allegany', 'Bronx', 'Broome', 'Cattaraugus', 'Cay
                     'Putnam', 'Queens', 'Rensselaer', 'Richmond', 'Rockland', 'St Lawrence', 'Saratoga', 'Schenectady', 'Schoharie', 
                     'Schuyler', 'Seneca', 'Steuben', 'Suffolk', 'Sullivan', 'Tioga', 'Tompkins', 'Ulster', 'Warren', 'Washington', 
                     'Wayne', 'Westchester', 'Wyoming', 'Yates']
+
 
 map.on('load', () => {
     map.addSource('nys-counties', {
@@ -29,6 +32,44 @@ map.on('load', () => {
         matchExpression.push(state_list[i], `rgba(${Math.floor(Math.random() * 257)}, ${Math.floor(Math.random() * 257)}, ${Math.floor(Math.random() * 257)}, ${Math.floor(Math.random() * 257)})`)
     }
     matchExpression.push('rgba(0, 0, 0, 0)');
+
+    // load data to adjust color
+    // basically get data and match each cases with the data on the map with counties name matched
+    // 1st goal: render the number of tested coronavirus in each year
+    covid_data_promise.then(data => { // array of of objects with time 
+        console.log(data);
+        const county_year_cases = {};
+
+        let current_county = ''
+        let total_positive;
+        let last_county = data[0]['County'];
+        let update = false;
+
+        for (let i = 0; i < data.length; i++){
+            let year = parseInt(data[i]["Test Date"].split('/')[2]);
+            current_county = data[i]['County'];
+
+            if (current_county != last_county){
+                total_positive = 0;
+                update = !update; // because a new county has emerged - set back to false again
+            }
+
+
+            last_county = data[i]['County'];
+            if (year === 2020){
+                total_positive += data[i]["New Positives"];
+            }
+            else if (!update){
+                county_year_cases[current_county] = total_positive;
+                update = !update;
+            }
+            else {
+                continue;
+            }
+        }
+
+        console.log(county_year_cases);
+    });
 
     map.addLayer({
         'id': 'nys-counties-fill-layer',
