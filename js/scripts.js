@@ -26,22 +26,18 @@ map.on('load', () => {
         data: "./nys_counties_id.geojson"
     });
 
-    const matchExpression = ['match', ['get', 'NAME']];
-
-    for (let i = 0; i < state_list.length; i++){
-        matchExpression.push(state_list[i], `rgba(${Math.floor(Math.random() * 257)}, ${Math.floor(Math.random() * 257)}, ${Math.floor(Math.random() * 257)}, ${Math.floor(Math.random() * 257)})`)
-    }
-    matchExpression.push('rgba(0, 0, 0, 0)');
+    // for (let i = 0; i < state_list.length; i++){
+    //     matchExpression.push(state_list[i], `rgba(${Math.floor(Math.random() * 257)}, ${Math.floor(Math.random() * 257)}, ${Math.floor(Math.random() * 257)}, ${Math.floor(Math.random() * 257)})`)
+    // }
 
     // load data to adjust color
     // basically get data and match each cases with the data on the map with counties name matched
     // 1st goal: render the number of tested coronavirus in each year
     covid_data_promise.then(data => { // array of of objects with time 
-        console.log(data);
         const county_year_cases = {};
 
         let current_county = ''
-        let total_positive;
+        let total_positive = 0;
         let last_county = data[0]['County'];
         let update = false;
 
@@ -68,24 +64,49 @@ map.on('load', () => {
             }
         }
 
-        console.log(county_year_cases);
-    });
+        const matchExpression = ['match', ['get', 'NAME']];
+        for (const key in county_year_cases){
+            let redness;
 
-    map.addLayer({
-        'id': 'nys-counties-fill-layer',
-        'type': 'fill',
-        'source': 'nys-counties',
-        'layout': {},
-        'paint': {
-            'fill-color': matchExpression,
-            'fill-opacity': [
-                'case',
-                ['boolean', ['feature-state', 'hover'], false], 
-                1, 
-                0.3
-            ],
-            'fill-outline-color': 'coral'
-        },
+            if (county_year_cases[key] < 10000){
+                redness = 50;
+            }
+            else if (county_year_cases[key] < 30000){
+                redness = 80;
+            }
+            else if (county_year_cases[key] < 80000){
+                redness = 120;
+            }
+            else if (county_year_cases[key] < 120000){
+                redness = 180;
+            }
+            else {
+                redness = 250;
+            }
+            let color = `rgba(${redness}, ${1}, ${1}, ${1})`
+            matchExpression.push(key, color)
+        }
+        matchExpression.push('rgba(0, 0, 0, 0)');
+
+        console.log(matchExpression);
+
+        map.addLayer({
+            'id': 'nys-counties-fill-layer',
+            'type': 'fill',
+            'source': 'nys-counties',
+            'layout': {},
+            'paint': {
+                'fill-color': matchExpression,
+                'fill-opacity': [
+                    'case',
+                    ['boolean', ['feature-state', 'hover'], false], 
+                    1, 
+                    0.3
+                ],
+                'fill-outline-color': 'coral'
+            },
+
+        });
     });
 
     map.addLayer({
