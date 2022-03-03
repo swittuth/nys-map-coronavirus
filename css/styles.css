@@ -9,3 +9,9 @@ body {
     bottom: 0;
     width: 100%;
 }
+
+#controller {
+    position: absolute;
+    /*border: 1px solid red;*/
+    width: 100%;
+}

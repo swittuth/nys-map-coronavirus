@@ -1,6 +1,11 @@
+const button_2020 = document.getElementById("2020");
+const button_2021 = document.getElementById("2021");
+const button_2022 = document.getElementById("2022");
+
 mapboxgl.accessToken = 'pk.eyJ1Ijoic3dpdHR1dGgiLCJhIjoiY2t6aGZzcjZ1MDNucjJ1bnlpbGVjMHozNSJ9.wP4jf_xQ5-IDXtzRc2ECpA';
 const map = new mapboxgl.Map({
     container: 'map',
+    // https://docs.mapbox.com/api/maps/styles/ - for other styles
     style: 'mapbox://styles/mapbox/dark-v10',
     center: [-75.690308,42.682435],
     zoom: 5.8
@@ -33,81 +38,98 @@ map.on('load', () => {
     // load data to adjust color
     // basically get data and match each cases with the data on the map with counties name matched
     // 1st goal: render the number of tested coronavirus in each year
-    covid_data_promise.then(data => { // array of of objects with time 
-        const county_year_cases = {};
 
-        let current_county = '';
-        let total_positive = 0;
-        let last_county = data[0]['County'];
-        let selected_year = 2020;
+    button_2020.addEventListener('click', () => {
+        map.removeLayer('nys-counties-fill-layer');
+        render_map(2020);
+    })
 
-        for (let i = 0; i < data.length; i++){
-            let year = parseInt(data[i]["Test Date"].split('/')[2]);
-            if (year === selected_year){
-                current_county = data[i]['County'];
-                
-                if (i > 0){
-                    last_county = data[i - 1]['County'];
+    button_2021.addEventListener('click', () => {
+        map.removeLayer('nys-counties-fill-layer');
+        render_map(2021);
+    })
+
+    button_2022.addEventListener('click', () => {
+        map.removeLayer('nys-counties-fill-layer');
+        render_map(2022);
+    })
+
+    function render_map(year) {
+        covid_data_promise.then(data => { // array of of objects with time 
+            const county_year_cases = {};
+    
+            let current_county = '';
+            let total_positive = 0;
+            let last_county = data[0]['County'];
+            let selected_year = year;
+    
+            for (let i = 0; i < data.length; i++){
+                let year = parseInt(data[i]["Test Date"].split('/')[2]);
+                if (year === selected_year){
+                    current_county = data[i]['County'];
+                    
+                    if (i > 0){
+                        last_county = data[i - 1]['County'];
+                    }
+                    if (current_county !== last_county){
+                        county_year_cases[last_county] = total_positive;
+                        total_positive = 0;
+                    }
+    
+                    total_positive += data[i]["New Positives"];
                 }
-                if (current_county !== last_county){
-                    county_year_cases[last_county] = total_positive;
-                    total_positive = 0;
+                else {
+                    continue;
                 }
-
-                total_positive += data[i]["New Positives"];
+                county_year_cases[current_county] = total_positive; // to account for the last county: Yates
             }
-            else {
-                continue;
+    
+            const matchExpression = ['match', ['get', 'NAME']];
+            for (const key in county_year_cases){
+                let redness;
+    
+                if (county_year_cases[key] < 30){
+                    redness = 0;
+                }
+                else if (county_year_cases[key] < 10000){
+                    redness = 50;
+                }
+                else if (county_year_cases[key] < 30000){
+                    redness = 80;
+                }
+                else if (county_year_cases[key] < 80000){
+                    redness = 120;
+                }
+                else if (county_year_cases[key] < 120000){
+                    redness = 180;
+                }
+                else {
+                    redness = 250;
+                }
+                let color = `rgba(${redness}, ${10}, ${10}, ${0.5})`
+                matchExpression.push(key, color)
             }
-            county_year_cases[current_county] = total_positive; // to account for the last county: Yates
-        }
-        console.log(county_year_cases);
-
-        const matchExpression = ['match', ['get', 'NAME']];
-        for (const key in county_year_cases){
-            let redness;
-
-            if (county_year_cases[key] < 30){
-                redness = 0;
-            }
-            else if (county_year_cases[key] < 10000){
-                redness = 50;
-            }
-            else if (county_year_cases[key] < 30000){
-                redness = 80;
-            }
-            else if (county_year_cases[key] < 80000){
-                redness = 120;
-            }
-            else if (county_year_cases[key] < 120000){
-                redness = 180;
-            }
-            else {
-                redness = 250;
-            }
-            let color = `rgba(${redness}, ${10}, ${10}, ${0.5})`
-            matchExpression.push(key, color)
-        }
-        matchExpression.push('rgba(0, 0, 0, 0)');
-
-        map.addLayer({
-            'id': 'nys-counties-fill-layer',
-            'type': 'fill',
-            'source': 'nys-counties',
-            'layout': {},
-            'paint': {
-                'fill-color': matchExpression,
-                'fill-opacity': [
-                    'case',
-                    ['boolean', ['feature-state', 'hover'], false], 
-                    1, 
-                    0.3
-                ],
-                'fill-outline-color': 'coral'
-            },
-
+            matchExpression.push('rgba(0, 0, 0, 0)');
+    
+            map.addLayer({
+                'id': 'nys-counties-fill-layer',
+                'type': 'fill',
+                'source': 'nys-counties',
+                'layout': {},
+                'paint': {
+                    'fill-color': matchExpression,
+                    'fill-opacity': [
+                        'case',
+                        ['boolean', ['feature-state', 'hover'], false], 
+                        1, 
+                        0.7
+                    ],
+                    'fill-outline-color': 'coral'
+                },
+    
+            });
         });
-    });
+    }
 
     map.addLayer({
         'id': 'nys-counties-line-layer',
@@ -130,7 +152,11 @@ map.on('load', () => {
         'layout': {
             'text-field': ['format', ['upcase',['get', 'ABBREV']], {'font-scale': 0.6}],
             'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'],
+        },
+        'paint':{
+            'text-color': 'white'
         }
+
     });
 
     map.on("mousemove", 'nys-counties-fill-layer', (e) => {
