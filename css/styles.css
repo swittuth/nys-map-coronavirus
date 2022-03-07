@@ -8,10 +8,24 @@ body {
     top: 0;
     bottom: 0;
     width: 100%;
+    margin-left: 25%;
+}
+
+#info-area {
+    position: absolute;
+    width: 24.9%;
+    height: 100%;
+    border: 1px solid red;
+}
+
+#title {
+    position: relative;
+    margin-left: 50px;
+    
 }
 
 #controller {
-    position: absolute;
+    position: relative;
     /*border: 1px solid red;*/
     width: 100%;
 }

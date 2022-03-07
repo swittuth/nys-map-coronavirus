@@ -14,10 +14,12 @@
     <body>
         
         <div id='map'></div>
-        <div id = controller>
-            <button id = '2020'>2020 Data</button>
-            <button id = '2021'>2021 Data</button>
-            <button id = '2022'>2022 Data</button>
+        <div id = 'info-area'>
+            <h1 id='title'>Information Area</h1>
+
+            <div id = controller>
+                <input id = 'slider' class = 'row' type = 'range' min = '2020' max = '2022' step = '1'>
+            </div>
         </div>
         
         <script type = 'text/javascript' src = 'covid_data.json'></script>

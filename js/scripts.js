@@ -1,14 +1,14 @@
-const button_2020 = document.getElementById("2020");
-const button_2021 = document.getElementById("2021");
-const button_2022 = document.getElementById("2022");
+const slider = document.getElementById('slider');
 
 mapboxgl.accessToken = 'pk.eyJ1Ijoic3dpdHR1dGgiLCJhIjoiY2t6aGZzcjZ1MDNucjJ1bnlpbGVjMHozNSJ9.wP4jf_xQ5-IDXtzRc2ECpA';
 const map = new mapboxgl.Map({
     container: 'map',
     // https://docs.mapbox.com/api/maps/styles/ - for other styles
     style: 'mapbox://styles/mapbox/light-v10',
-    center: [-75.690308,42.682435],
-    zoom: 5.8
+    center: [-74.553223,42.726839],
+    maxBounds: [[-81.287842,40.195659],
+        [-67.829590,45.158801]],
+    zoom: 6
 });
 let hoveredStateId = null;
 
@@ -39,20 +39,20 @@ map.on('load', () => {
     // basically get data and match each cases with the data on the map with counties name matched
     // 1st goal: render the number of tested coronavirus in each year
 
-    button_2020.addEventListener('click', () => {
-        map.removeLayer('nys-counties-fill-layer');
-        render_map(2020);
-    })
-
-    button_2021.addEventListener('click', () => {
-        map.removeLayer('nys-counties-fill-layer');
-        render_map(2021);
-    })
-
-    button_2022.addEventListener('click', () => {
-        map.removeLayer('nys-counties-fill-layer');
-        render_map(2022);
-    })
+    slider.addEventListener('input', event => {
+        if (event.target.value === '2020'){
+            map.removeLayer('nys-counties-fill-layer');
+            render_map(2020);
+        }
+        else if (event.target.value === '2021'){
+            map.removeLayer('nys-counties-fill-layer');
+            render_map(2021);
+        }
+        else if (event.target.value === '2022'){
+            map.removeLayer('nys-counties-fill-layer');
+            render_map(2022);
+        }
+    });
 
     function render_map(year) {
         covid_data_promise.then(data => { // array of of objects with time 
