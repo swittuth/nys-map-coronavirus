@@ -6,7 +6,7 @@ mapboxgl.accessToken = 'pk.eyJ1Ijoic3dpdHR1dGgiLCJhIjoiY2t6aGZzcjZ1MDNucjJ1bnlpb
 const map = new mapboxgl.Map({
     container: 'map',
     // https://docs.mapbox.com/api/maps/styles/ - for other styles
-    style: 'mapbox://styles/mapbox/dark-v10',
+    style: 'mapbox://styles/mapbox/light-v10',
     center: [-75.690308,42.682435],
     zoom: 5.8
 });
@@ -154,7 +154,7 @@ map.on('load', () => {
             'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'],
         },
         'paint':{
-            'text-color': 'white'
+            'text-color': 'black'
         }
 
     });
