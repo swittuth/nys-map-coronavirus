@@ -1,4 +1,5 @@
 const slider = document.getElementById('slider');
+const title = document.getElementById('title');
 
 mapboxgl.accessToken = 'pk.eyJ1Ijoic3dpdHR1dGgiLCJhIjoiY2t6aGZzcjZ1MDNucjJ1bnlpbGVjMHozNSJ9.wP4jf_xQ5-IDXtzRc2ECpA';
 const map = new mapboxgl.Map({
@@ -31,41 +32,44 @@ map.on('load', () => {
         data: "./nys_counties_id.geojson"
     });
 
-    // for (let i = 0; i < state_list.length; i++){
-    //     matchExpression.push(state_list[i], `rgba(${Math.floor(Math.random() * 257)}, ${Math.floor(Math.random() * 257)}, ${Math.floor(Math.random() * 257)}, ${Math.floor(Math.random() * 257)})`)
-    // }
-
     // load data to adjust color
     // basically get data and match each cases with the data on the map with counties name matched
     // 1st goal: render the number of tested coronavirus in each year
 
     slider.addEventListener('input', event => {
-        if (event.target.value === '2020'){
-            map.removeLayer('nys-counties-fill-layer');
-            render_map(2020);
-        }
-        else if (event.target.value === '2021'){
-            map.removeLayer('nys-counties-fill-layer');
-            render_map(2021);
-        }
-        else if (event.target.value === '2022'){
-            map.removeLayer('nys-counties-fill-layer');
-            render_map(2022);
-        }
+        let start_date = new Date("03/01/2020");
+        let days_to_add = event.target.value - 1;
+        start_date.setDate(start_date.getDate() + days_to_add); // added days to date to render map correctly
+        let current_month = start_date.getMonth() + 1;
+        let current_day = start_date.getDate();
+        let current_year = start_date.getFullYear();
+
+        map.removeLayer('nys-counties-fill-layer');
+        render_map(current_day, current_month, current_year);
+
     });
 
-    function render_map(year) {
+    // render map on that particular day, month and year 
+    function render_map(chosen_day, chosen_month, chosen_year) {
         covid_data_promise.then(data => { // array of of objects with time 
             const county_year_cases = {};
     
             let current_county = '';
             let total_positive = 0;
             let last_county = data[0]['County'];
-            let selected_year = year;
     
+            /*
+            render by month and day by checking for month and day 
+            find the total range in python
+            */
+
             for (let i = 0; i < data.length; i++){
-                let year = parseInt(data[i]["Test Date"].split('/')[2]);
-                if (year === selected_year){
+                let string_date = data[i]["Test Date"].split(' ')[0].split('/');
+                let month = parseInt(string_date[0]);
+                let day = parseInt(string_date[1]);
+                let year = parseInt(string_date[2]);
+                
+                if (month === chosen_month && day === chosen_day && year === chosen_year){
                     current_county = data[i]['County'];
                     
                     if (i > 0){
@@ -76,7 +80,7 @@ map.on('load', () => {
                         total_positive = 0;
                     }
     
-                    total_positive += data[i]["New Positives"];
+                    total_positive += data[i]["Cumulative Number of Positives"];
                 }
                 else {
                     continue;
@@ -126,7 +130,15 @@ map.on('load', () => {
                     ],
                     'fill-outline-color': 'coral'
                 },
-    
+            });
+
+            map.on('click', 'nys-counties-fill-layer', e => {
+                let name_clicked = e.features['0']['properties']["NAME"];
+                let total_cases = county_year_cases[name_clicked];
+
+                
+                title.innerHTML = `${name_clicked}: ${total_cases}`;
+                
             });
         });
     }
@@ -160,6 +172,7 @@ map.on('load', () => {
     });
 
     map.on("mousemove", 'nys-counties-fill-layer', (e) => {
+        map.getCanvas().style.cursor = 'pointer';
         if (e.features.length > 0) {
             if (hoveredStateId !== null) {
                 map.setFeatureState(
@@ -175,7 +188,9 @@ map.on('load', () => {
         }
     });
 
+
     map.on('mouseleave', 'nys-counties-fill-layer', () => {
+        map.getCanvas().style.cursor = '';
         if (hoveredStateId !== null) {
             map.setFeatureState(
                 { source: 'nys-counties', id: hoveredStateId },

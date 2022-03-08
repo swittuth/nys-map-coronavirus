@@ -17,6 +17,7 @@ def main():
         data_file.close()
     '''
 
+    '''
     max_2020 = -1
     substring1 = 'Test Date'
     substring2 = 'Cumulative Number of Positives'
@@ -33,6 +34,7 @@ def main():
     data_file.close()
 
     print(max_2020)
+    '''
 
 
 if __name__ == "__main__":

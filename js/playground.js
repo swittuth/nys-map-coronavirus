@@ -1,8 +1,8 @@
-const obj = {
-    "Tyler" : 32,
-    "Howard": 45
-}
+const current_date = new Date();
+current_date.setDate(current_date.getDate() + 210);
 
-for (const key in obj){
-    console.log(`${key} ${obj[key]}`)
-}
+console.log(current_date.getFullYear());
+
+// getDate() is get the current day of the month 
+// getMonth() returns the index of month 0-11 -> need to add one 
+// getFullYear() to get year 

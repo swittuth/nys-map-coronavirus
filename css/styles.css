@@ -26,6 +26,7 @@ body {
 
 #controller {
     position: relative;
+    margin-left: 100px;
     /*border: 1px solid red;*/
     width: 100%;
 }
