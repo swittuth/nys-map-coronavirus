@@ -36,6 +36,28 @@ def main():
     print(max_2020)
     '''
 
+    below_100k = 0
+    below_400k = 0
+    below_700k = 0
+
+    substring = "Cumulative Number of Positives"
+    while line != '':
+        if substring in line:
+            cases = int(line.split(" ")[-1].rstrip(',\n'))
+            if cases <= 100000:
+                below_100k += 1
+            elif cases <= 400000:
+                below_400k += 1
+            else:
+                below_700k += 1
+        line = data_file.readline()
+
+    print(below_100k)
+    print(below_400k)
+    print(below_700k)
+
+
+
 
 if __name__ == "__main__":
     main()

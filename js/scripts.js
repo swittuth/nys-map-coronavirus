@@ -25,6 +25,25 @@ const state_list = ['Albany', 'Allegany', 'Bronx', 'Broome', 'Cattaraugus', 'Cay
                     'Schuyler', 'Seneca', 'Steuben', 'Suffolk', 'Sullivan', 'Tioga', 'Tompkins', 'Ulster', 'Warren', 'Washington', 
                     'Wayne', 'Westchester', 'Wyoming', 'Yates']
 
+const tints_array = [
+    '#ffffff',
+    '#f6deff', '#f5dbff', '#f5d9ff', '#f4d6ff', '#f3d4ff', '#f3d1ff', '#f2cfff', '#f1ccff', '#f1c9ff', '#f0c7ff', '#efc4ff', '#eec2ff', '#eebfff', 
+    '#edbdff', '#ecbaff', '#ecb8ff', '#ebb5ff', '#eab3ff', '#eab0ff', '#e9adff', '#e8abff', '#e8a8ff', '#e7a6ff', '#e6a3ff', '#e5a1ff', '#e59eff', 
+    '#e49cff', '#e399ff', '#e396ff', '#e294ff', '#e191ff', '#e18fff', '#e08cff', '#df8aff', '#df87ff', '#de85ff', '#dd82ff', '#dd80ff', '#dc7dff', 
+    '#db7aff', '#da78ff', '#da75ff', '#d973ff', '#d870ff', '#d86eff', '#d76bff', '#d669ff', '#d666ff', '#d563ff', '#d461ff', '#d45eff', '#d35cff', 
+    '#d259ff', '#d157ff', '#d154ff', '#d052ff', '#cf4fff', '#cf4dff', '#ce4aff', '#cd47ff', '#cd45ff', '#cc42ff', '#cb40ff', '#cb3dff', '#ca3bff', 
+    '#c938ff', '#c836ff', '#c833ff', '#c730ff', '#c62eff', '#c62bff', '#c529ff', '#c426ff', '#c424ff', '#c321ff', '#c21fff', '#c21cff', '#c119ff', 
+    '#c017ff', '#c014ff', '#bf12ff', '#be0fff', '#bd0dff', '#bd0aff', '#bc08ff', '#bb05ff', '#bb03ff', '#ba00ff', '#b800fc', '#b600fa', '#b400f7', 
+    '#b300f5', '#b100f2', '#af00f0', '#ad00ed', '#ab00eb', '#a900e8', '#a700e6', '#a600e3', '#a400e0', '#a200de', '#a000db', '#9e00d9', '#9c00d6', 
+    '#9a00d4', '#9900d1', '#9700cf', '#9500cc', '#9300c9', '#9100c7', '#8f00c4', '#8d00c2', '#8c00bf', '#8a00bd', '#8800ba', '#8600b8', '#8400b5', 
+    '#8200b3', '#8000b0', '#7e00ad', '#7d00ab', '#7b00a8', '#7900a6', '#7700a3', '#7500a1', '#73009e', '#71009c', '#700099', '#6e0096', '#6c0094', 
+    '#6a0091', '#68008f', '#66008c', '#64008a', '#630087', '#610085', '#5f0082', '#5d0080', '#5b007d', '#59007a', '#570078', '#560075', '#540073', 
+    '#520070', '#50006e', '#4e006b', '#4c0069', '#4a0066', '#490063', '#470061', '#45005e', '#43005c', '#410059', '#3f0057', '#3d0054', '#3c0052', 
+    '#3a004f', '#38004d', '#36004a', '#340047', '#320045', '#300042', '#2f0040', '#2d003d', '#2b003b', '#290038', '#270036', '#250033', '#230030', 
+    '#21002e', '#20002b', '#1e0029', '#1c0026', '#1a0024', '#180021', '#16001f', '#14001c', '#130019', '#110017', '#0f0014', '#0d0012', '#0b000f', 
+    '#09000d', '#07000a', '#060008', '#040005', '#020003', '#000000'
+]
+
 
 map.on('load', () => {
     map.addSource('nys-counties', {
@@ -87,288 +106,35 @@ map.on('load', () => {
                 county_year_cases[current_county] = total_positive; // to account for the last county: Yates
             }
     
+            // most dense - concetrated range of virus is around 100,000 (use 150 colors for this)
+            // second shows arround 400,000 (35 colors)
+            // highest is 680,000 (10 colors)
+            const threshold_one = 100000;
+            const threshold_two = 400000;
+            const threshold_three = 676316;
+            const first_num_colors = 150;
+            const second_num_colors = 10;
+            const third_num_colors = tints_array.length - first_num_colors - second_num_colors;
+            const first_color_div = Math.floor(100000 / first_num_colors);
+            const second_color_div = Math.floor((threshold_two - threshold_one) / second_num_colors);
+            const third_color_div = Math.floor(threshold_three / third_num_colors);
             const matchExpression = ['match', ['get', 'NAME']];
             for (const key in county_year_cases){
-                // let redness;
-    
-                // if (county_year_cases[key] < 30){
-                //     redness = 0;
-                // }
-                // else if (county_year_cases[key] < 10000){
-                //     redness = 50;
-                // }
-                // else if (county_year_cases[key] < 30000){
-                //     redness = 80;
-                // }
-                // else if (county_year_cases[key] < 80000){
-                //     redness = 120;
-                // }
-                // else if (county_year_cases[key] < 120000){
-                //     redness = 180;
-                // }
-                // else {
-                //     redness = 250;
-                // }
-                // let color_red = `rgba(${redness}, ${10}, ${10}, ${0.5})`
-
+                
                 let color;
                 let cases = county_year_cases[key];
 
-                if (cases === 0){
-                    color = '#ffffff';
+                if (cases <= threshold_one){
+                    color = tints_array[Math.floor(cases / first_color_div)];
+                    
                 }
-                else if (cases <= 50){
-                    color = '#fefcff';
+                else if (cases <= threshold_two){
+                    color = tints_array[first_num_colors + Math.floor(cases / second_color_div)];
                 }
-                else if (cases <= 100){
-                    color = '#fefaff';
+                else {
+                    color = tints_array[first_num_colors + second_num_colors + Math.floor(cases / third_color_div)];
                 }
-                else if (cases <= 200){
-                    color = '#fdf7ff';
-                }
-                else if (cases <= 500){
-                    color = '#fcf5ff';
-                }
-                else if (cases <= 750){
-                    color = '#fcf2ff';
-                }
-                else if (cases <= 800){
-                    color = '#fbf0ff';
-                }
-                else if (cases <= 950){
-                    color = '#faedff';
-                }
-                else if (cases <= 1050){
-                    color = '#f9ebff';
-                }
-                else if (cases <= 1500){
-                    color = '#f9e8ff';
-                }
-                else if (cases <= 2500){
-                    color = '#f8e6ff';
-                }
-                else if (cases <= 4000){
-                    color = '#f7e3ff';
-                }
-                else if (cases <= 4200){
-                    color = '#f7e0ff';
-                }
-                else if (cases <= 4800){
-                    color = '#f6deff';
-                }
-                else if (cases <= 5500){
-                    color = '#f5dbff';
-                }
-                else if (cases <= 6800){
-                    color = '#f5d9ff';
-                }
-                else if (cases <= 7200){
-                    color = '#f4d6ff';
-                }
-                else if (cases <= 7600){
-                    color = '#f3d4ff';
-                }
-                else if (cases <= 8500){
-                    color = '#f3d1ff';
-                }
-                else if (cases <= 8800){
-                    color = '#f2cfff'
-                }
-                else if (cases <= 9500){
-                    color = '#f1ccff';
-                }
-                else if (cases <= 12000){
-                    color = '#f1c9ff';
-                }
-                else if (cases <= 12500){
-                    color = '#f0c7ff';
-                }
-                else if (cases <= 17500){
-                    color = '#efc4ff';
-                }
-                else if (cases <= 23000){
-                    color = '#eec2ff';
-                }
-                else if (cases <= 25000){
-                    color = '#eebfff';
-                }
-                else if (cases <= 27500){
-                    color = '#edbdff';
-                }
-                else if (cases <= 30000){
-                    color = '#ecbaff';
-                }
-                else if (cases <= 35000){
-                    color = '#ecb8ff';
-                }
-                else if (cases <= 45000){
-                    color = '#ebb5ff';
-                }
-                else if (cases <= 55000){
-                    color = '#eab3ff';
-                }
-                else if (cases <= 75000){
-                    color = '#eab0ff';
-                }
-                else if (cases <= 82000){
-                    color = '#e9adff';
-                }
-                else if (cases <= 85000){
-                    color = '#e8abff';
-                }
-                else if (cases <= 90000){
-                    color = '#e8a8ff';
-                }
-                else if (cases <= 93000){
-                    color = '#e7a6ff';
-                }
-                else if (cases <= 100000){
-                    color = '#e6a3ff';
-                }
-                else if (cases <= 105000){
-                    color = '#e5a1ff';
-                }
-                else if (cases <= 108000){
-                    color = '#e59eff';
-                }
-                else if (cases <= 112000){
-                    color = '#e49cff';
-                }
-                else if (cases <= 115000){
-                    color = '#e399ff';
-                }
-                else if (cases <= 117000){
-                    color = '#e396ff';
-                }
-                else if (cases <= 120000){
-                    color = '#e294ff';
-                }
-                else if (cases <= 122000){
-                    color = '#e191ff';
-                }
-                else if (cases <= 125000){
-                    color = '#e18fff';
-                }
-                else if (cases <= 127000){
-                    color = '#e08cff';
-                }
-                else if (cases <= 129000){
-                    color = '#df8aff';
-                }
-                else if (cases <= 136000){
-                    color = '#df87ff'
-                }
-                else if (cases <= 138000){
-                    color = '#de85ff';
-                }
-                else if (cases <= 145000){
-                    color = '#dd82ff';
-                }
-                else if (cases <= 150000){
-                    color = '#dd80ff';
-                }
-                else if (cases <= 153000){
-                    color = '#dc7dff';
-                }
-                else if (cases <= 156000){
-                    color = '#db7aff';
-                }
-                else if (cases <= 165000){
-                    color = '#da78ff';
-                }
-                else if (cases <= 182000){
-                    color = '#da75ff';
-                }
-                else if (cases <= 188000){
-                    color = '#d973ff';
-                }
-                else if (cases <= 195000){
-                    color = '#d870ff';
-                }
-                else if (cases <= 202000){
-                    color = '#d86eff';
-                }
-                else if (cases <= 204000){
-                    color = '#d76bff';
-                }
-                else if (cases <= 205000){
-                    color = '#d669ff';
-                }
-                else if (cases <= 208000){
-                    color = '#d666ff';
-                }
-                else if (cases <= 212000){
-                    color = '#d563ff';
-                }
-                else if (cases <= 215000){
-                    color = '#d461ff';
-                }
-                else if (cases <= 217000){
-                    color = '#d45eff';
-                }
-                else if (cases <= 220000){
-                    color = '#d35cff';
-                }
-                else if (cases <= 222000){
-                    color = '#d259ff';
-                }
-                else if (cases <= 225000){
-                    color = '#d157ff';
-                }
-                else if (cases <= 228000){
-                    color = '#d154ff';
-                }
-                else if (cases <= 235000){
-                    color = '#d052ff';
-                }
-                else if (cases <= 238000){
-                    color = '#cf4fff';
-                }
-                else if (cases <= 242000){
-                    color = '#cf4dff';
-                }
-                else if (cases <= 244000){
-                    color = '#ce4aff';
-                }
-                else if (cases <= 247000){
-                    color = '#cd47ff';
-                }
-                else if (cases <= 250000){
-                    color = '#cd45ff';
-                }
-                else if (cases <= 252000){
-                    color = '#cc42ff';
-                }
-                else if (cases <= 254000){
-                    color = '#cb40ff';
-                }
-                else if (cases <= 257000){
-                    color = '#cb3dff';
-                }
-                else if (cases <= 260000){
-                    color = '#ca3bff';
-                }
-                else if (cases <= 262000){
-                    color = '#c938ff';
-                }
-                else if (cases <= 265000){
-                    color = '#c836ff';
-                }
-                else if (cases <= 272000){
-                    color = '#c833ff';
-                }
-                else if (cases <= 278000){
-                    color = '#c730ff';
-                }
-                else if (cases <= 282000){
-                    color = '#c62eff';
-                }
-                else if (cases <= 285000){
-                    color = '#c62bff';
-                }
-                else{
-                    color = '#000000';
-                }
+                
                 matchExpression.push(key, color)
 
             }
