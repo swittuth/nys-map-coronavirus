@@ -1,5 +1,6 @@
 const slider = document.getElementById('slider');
 const title = document.getElementById('title');
+const date = document.getElementById('date');
 
 mapboxgl.accessToken = 'pk.eyJ1Ijoic3dpdHR1dGgiLCJhIjoiY2t6aGZzcjZ1MDNucjJ1bnlpbGVjMHozNSJ9.wP4jf_xQ5-IDXtzRc2ECpA';
 const map = new mapboxgl.Map({
@@ -61,6 +62,7 @@ map.on('load', () => {
         let current_month = start_date.getMonth() + 1;
         let current_day = start_date.getDate();
         let current_year = start_date.getFullYear();
+        date.innerHTML = `Date: ${current_month} ${current_day}, ${current_year}`;
 
         map.removeLayer('nys-counties-fill-layer');
         render_map(current_day, current_month, current_year);
