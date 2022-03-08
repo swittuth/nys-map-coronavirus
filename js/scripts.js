@@ -26,24 +26,25 @@ const state_list = ['Albany', 'Allegany', 'Bronx', 'Broome', 'Cattaraugus', 'Cay
                     'Schuyler', 'Seneca', 'Steuben', 'Suffolk', 'Sullivan', 'Tioga', 'Tompkins', 'Ulster', 'Warren', 'Washington', 
                     'Wayne', 'Westchester', 'Wyoming', 'Yates']
 
-const tints_array = [
-    '#ffffff',
-    '#f6deff', '#f5dbff', '#f5d9ff', '#f4d6ff', '#f3d4ff', '#f3d1ff', '#f2cfff', '#f1ccff', '#f1c9ff', '#f0c7ff', '#efc4ff', '#eec2ff', '#eebfff', 
-    '#edbdff', '#ecbaff', '#ecb8ff', '#ebb5ff', '#eab3ff', '#eab0ff', '#e9adff', '#e8abff', '#e8a8ff', '#e7a6ff', '#e6a3ff', '#e5a1ff', '#e59eff', 
-    '#e49cff', '#e399ff', '#e396ff', '#e294ff', '#e191ff', '#e18fff', '#e08cff', '#df8aff', '#df87ff', '#de85ff', '#dd82ff', '#dd80ff', '#dc7dff', 
-    '#db7aff', '#da78ff', '#da75ff', '#d973ff', '#d870ff', '#d86eff', '#d76bff', '#d669ff', '#d666ff', '#d563ff', '#d461ff', '#d45eff', '#d35cff', 
-    '#d259ff', '#d157ff', '#d154ff', '#d052ff', '#cf4fff', '#cf4dff', '#ce4aff', '#cd47ff', '#cd45ff', '#cc42ff', '#cb40ff', '#cb3dff', '#ca3bff', 
-    '#c938ff', '#c836ff', '#c833ff', '#c730ff', '#c62eff', '#c62bff', '#c529ff', '#c426ff', '#c424ff', '#c321ff', '#c21fff', '#c21cff', '#c119ff', 
-    '#c017ff', '#c014ff', '#bf12ff', '#be0fff', '#bd0dff', '#bd0aff', '#bc08ff', '#bb05ff', '#bb03ff', '#ba00ff', '#b800fc', '#b600fa', '#b400f7', 
-    '#b300f5', '#b100f2', '#af00f0', '#ad00ed', '#ab00eb', '#a900e8', '#a700e6', '#a600e3', '#a400e0', '#a200de', '#a000db', '#9e00d9', '#9c00d6', 
-    '#9a00d4', '#9900d1', '#9700cf', '#9500cc', '#9300c9', '#9100c7', '#8f00c4', '#8d00c2', '#8c00bf', '#8a00bd', '#8800ba', '#8600b8', '#8400b5', 
-    '#8200b3', '#8000b0', '#7e00ad', '#7d00ab', '#7b00a8', '#7900a6', '#7700a3', '#7500a1', '#73009e', '#71009c', '#700099', '#6e0096', '#6c0094', 
-    '#6a0091', '#68008f', '#66008c', '#64008a', '#630087', '#610085', '#5f0082', '#5d0080', '#5b007d', '#59007a', '#570078', '#560075', '#540073', 
-    '#520070', '#50006e', '#4e006b', '#4c0069', '#4a0066', '#490063', '#470061', '#45005e', '#43005c', '#410059', '#3f0057', '#3d0054', '#3c0052', 
-    '#3a004f', '#38004d', '#36004a', '#340047', '#320045', '#300042', '#2f0040', '#2d003d', '#2b003b', '#290038', '#270036', '#250033', '#230030', 
-    '#21002e', '#20002b', '#1e0029', '#1c0026', '#1a0024', '#180021', '#16001f', '#14001c', '#130019', '#110017', '#0f0014', '#0d0012', '#0b000f', 
-    '#09000d', '#07000a', '#060008', '#040005', '#020003', '#000000'
-]
+const tints_array = ['#faf3ed', '#faf1eb', '#f9efe8', '#f8eee6', '#f8ece3', '#f7eae1', '#f6e8de', '#f6e7dc', '#f5e5d9', '#f4e3d7', 
+                    '#f4e1d4', '#f3e0d2', '#f2decf', '#f2dccd', '#f1daca', '#f0d9c8', '#f0d7c5', '#efd5c3', '#eed4c0', '#eed2be', 
+                    '#edd0bb', '#ecceb9', '#eccdb6', '#ebcbb4', '#eac9b1', '#eac7af', '#e9c6ac', '#e8c4aa', '#e8c2a7', '#e7c0a5', 
+                    '#e6bfa2', '#e6bda0', '#e5bb9d', '#e4b99b', '#e4b898', '#e3b696', '#e2b493', '#e2b291', '#e1b18e', '#e0af8c', 
+                    '#e0ad89', '#dfab87', '#deaa84', '#dea882', '#dda67f', '#dca57c', '#dba37a', '#dba177', '#da9f75', '#d99e72', 
+                    '#d99c70', '#d89a6d', '#d7986b', '#d79768', '#d69566', '#d59363', '#d59161', '#d4905e', '#d38e5c', '#d38c59', 
+                    '#d28a57', '#d18954', '#d18752', '#d0854f', '#cf834d', '#cf824a', '#ce8048', '#cd7e45', '#cd7d43', '#cc7b40', 
+                    '#cb793e', '#cb773b', '#ca7639', '#c97436', '#c97234', '#c87031', '#c76f2f', '#c76d2c', '#c66b2a', '#c56927', 
+                    '#c56825', '#c46622', '#c36420', '#c3621d', '#c2611b', '#c15f18', '#c15d16', '#c05b13', '#bf5a11', '#bf580e', 
+                    '#be560c', '#bd5409', '#bd5307', '#bc5104', '#ba5004', '#b84f04', '#b64f04', '#b44e04', '#b34d04', '#b14c04', 
+                    '#af4b04', '#ad4b04', '#ab4a04', '#a94904', '#a74804', '#a54704', '#a44603', '#a24603', '#a04503', '#9e4403', 
+                    '#9c4303', '#9a4203', '#984203', '#964103', '#954003', '#933f03', '#913e03', '#8f3e03', '#8d3d03', '#8b3c03', 
+                    '#893b03', '#873a03', '#853a03', '#843903', '#823803', '#803703', '#7e3603', '#7c3503', '#7a3503', '#783403', 
+                    '#763303', '#753202', '#733102', '#713102', '#6f3002', '#6d2f02', '#6b2e02', '#692d02', '#672d02', '#662c02', 
+                    '#642b02', '#622a02', '#602902', '#5e2902', '#5c2802', '#5a2702', '#582602', '#562502', '#552402', '#532402', 
+                    '#512302', '#4f2202', '#4d2102', '#4b2002', '#492002', '#471f02', '#461e01', '#441d01', '#421c01', '#401c01', 
+                    '#3e1b01', '#3c1a01', '#3a1901', '#381801', '#371701', '#351701', '#331601', '#311501', '#2f1401', '#2d1301', 
+                    '#2b1301', '#291201', '#271101', '#261001', '#240f01', '#220f01', '#200e01', '#1e0d01', '#1c0c01', '#1a0b01', 
+                    '#180b01', '#170a00', '#150900']
 
 
 map.on('load', () => {
@@ -114,8 +115,8 @@ map.on('load', () => {
             const threshold_one = 100000;
             const threshold_two = 400000;
             const threshold_three = 676316;
-            const first_num_colors = 150;
-            const second_num_colors = 10;
+            const first_num_colors = 140;
+            const second_num_colors = 30;
             const third_num_colors = tints_array.length - first_num_colors - second_num_colors;
             const first_color_div = Math.floor(100000 / first_num_colors);
             const second_color_div = Math.floor((threshold_two - threshold_one) / second_num_colors);
@@ -153,7 +154,7 @@ map.on('load', () => {
                         'case',
                         ['boolean', ['feature-state', 'hover'], false], 
                         1, 
-                        0.7
+                        0.9
                     ],
                     'fill-outline-color': 'coral'
                 },

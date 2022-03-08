@@ -1,1000 +1,910 @@
-#ffffff
-
-
-tint
-99%
-#fefcff
-
-
-tint
-98%
-#fefaff
-
-
-tint
-97%
-#fdf7ff
-
-
-tint
-96%
-#fcf5ff
-
-
-tint
-95%
-#fcf2ff
-
-
-tint
-94%
-#fbf0ff
-
-
-tint
-93%
-#faedff
+#faf3ed
 
 
 tint
 92%
-#f9ebff
+#faf1eb
 
 
 tint
 91%
-#f9e8ff
-———————————— (10 colors used)
+#f9efe8
+
 
 tint
 90%
-#f8e6ff
+#f8eee6
 
 
 tint
 89%
-#f7e3ff
+#f8ece3
 
 
 tint
 88%
-#f7e0ff
+#f7eae1
 
 
 tint
 87%
-#f6deff
+#f6e8de
 
 
 tint
 86%
-#f5dbff (5) —— used
+#f6e7dc
 
 
 tint
 85%
-#f5d9ff
+#f5e5d9
 
 
 tint
 84%
-#f4d6ff
+#f4e3d7
 
 
 tint
 83%
-#f3d4ff
+#f4e1d4
 
 
 tint
 82%
-#f3d1ff
+#f3e0d2
 
 
 tint
 81%
-#f2cfff (10)
+#f2decf
 
 
 tint
 80%
-#f1ccff
+#f2dccd
 
 
 tint
 79%
-#f1c9ff
+#f1daca
 
 
 tint
 78%
-#f0c7ff
+#f0d9c8
 
 
 tint
 77%
-#efc4ff
+#f0d7c5
 
 
 tint
 76%
-#eec2ff (15)
+#efd5c3
 
 
 tint
 75%
-#eebfff
+#eed4c0
 
 
 tint
 74%
-#edbdff — used
+#eed2be
 
 
 tint
 73%
-#ecbaff
+#edd0bb
 
 
 tint
 72%
-#ecb8ff
+#ecceb9
 
 
 tint
 71%
-#ebb5ff (20)
+#eccdb6
 
 
 tint
 70%
-#eab3ff — (used)
+#ebcbb4
 
 
 tint
 69%
-#eab0ff
+#eac9b1
 
 
 tint
 68%
-#e9adff
+#eac7af
 
 
 tint
 67%
-#e8abff
+#e9c6ac
 
 
 tint
 66%
-#e8a8ff (25)
+#e8c4aa
 
 
 tint
 65%
-#e7a6ff
+#e8c2a7
 
 
 tint
 64%
-#e6a3ff
+#e7c0a5
 
 
 tint
 63%
-#e5a1ff
+#e6bfa2
 
 
 tint
 62%
-#e59eff
+#e6bda0
 
 
 tint
 61%
-#e49cff (30)
+#e5bb9d
 
 
 tint
 60%
-#e399ff
+#e4b99b
 
 
 tint
 59%
-#e396ff
+#e4b898
 
 
 tint
 58%
-#e294ff
+#e3b696
 
 
 tint
 57%
-#e191ff
+#e2b493
 
 
 tint
 56%
-#e18fff (35)
+#e2b291
 
 
 tint
 55%
-#e08cff
+#e1b18e
 
 
 tint
 54%
-#df8aff
+#e0af8c
 
 
 tint
 53%
-#df87ff
+#e0ad89
 
 
 tint
 52%
-#de85ff
+#dfab87
 
 
 tint
 51%
-#dd82ff (40) —— (Used)
+#deaa84
 
 
 tint
 50%
-#dd80ff
+#dea882
 
 
 tint
 49%
-#dc7dff
+#dda67f
 
 
 tint
 48%
-#db7aff
+#dca57c
 
 
 tint
 47%
-#da78ff
+#dba37a
 
 
 tint
 46%
-#da75ff
+#dba177
 
 
 tint
 45%
-#d973ff — (used)
+#da9f75
 
 
 tint
 44%
-#d870ff
+#d99e72
 
 
 tint
 43%
-#d86eff
+#d99c70
 
 
 tint
 42%
-#d76bff
+#d89a6d
 
 
 tint
 41%
-#d669ff
+#d7986b
 
 
 tint
 40%
-#d666ff
+#d79768
 
 
 tint
 39%
-#d563ff
+#d69566
 
 
 tint
 38%
-#d461ff
+#d59363
 
 
 tint
 37%
-#d45eff — (used)
+#d59161
 
 
 tint
 36%
-#d35cff
+#d4905e
 
 
 tint
 35%
-#d259ff
+#d38e5c
 
 
 tint
 34%
-#d157ff
+#d38c59
 
 
 tint
 33%
-#d154ff
+#d28a57
 
 
 tint
 32%
-#d052ff
+#d18954
 
 
 tint
 31%
-#cf4fff
+#d18752
 
 
 tint
 30%
-#cf4dff
+#d0854f
 
 
 tint
 29%
-#ce4aff
+#cf834d
 
 
 tint
 28%
-#cd47ff
+#cf824a
 
 
 tint
 27%
-#cd45ff
+#ce8048
 
 
 tint
 26%
-#cc42ff
+#cd7e45
 
 
 tint
 25%
-#cb40ff
+#cd7d43
 
 
 tint
 24%
-#cb3dff
+#cc7b40
 
 
 tint
 23%
-#ca3bff
+#cb793e
 
 
 tint
 22%
-#c938ff
+#cb773b
 
 
 tint
 21%
-#c836ff
+#ca7639
 
 
 tint
 20%
-#c833ff
+#c97436
 
 
 tint
 19%
-#c730ff
+#c97234
 
 
 tint
 18%
-#c62eff
+#c87031
 
 
 tint
 17%
-#c62bff — (Used)
+#c76f2f
 
 
 tint
 16%
-#c529ff
+#c76d2c
 
 
 tint
 15%
-#c426ff
+#c66b2a
 
 
 tint
 14%
-#c424ff
+#c56927
 
 
 tint
 13%
-#c321ff
+#c56825
 
 
 tint
 12%
-#c21fff
+#c46622
 
 
 tint
 11%
-#c21cff
+#c36420
 
 
 tint
 10%
-#c119ff
+#c3621d
 
 
 tint
 9%
-#c017ff
+#c2611b
 
 
 tint
 8%
-#c014ff
+#c15f18
 
 
 tint
 7%
-#bf12ff
+#c15d16
 
 
 tint
 6%
-#be0fff
+#c05b13
 
 
 tint
 5%
-#bd0dff
+#bf5a11
 
 
 tint
 4%
-#bd0aff
+#bf580e
 
 
 tint
 3%
-#bc08ff
+#be560c
 
 
 tint
 2%
-#bb05ff
+#bd5409
 
 
 tint
 1%
-#bb03ff
+#bd5307
 
 base
 0%
-#ba00ff
+#bc5104
 
 
 shade
 1%
-#b800fc
+#ba5004
 
 
 shade
 2%
-#b600fa
+#b84f04
 
 
 shade
 3%
-#b400f7
+#b64f04
 
 
 shade
 4%
-#b300f5
+#b44e04
 
 
 shade
 5%
-#b100f2
+#b34d04
 
 
 shade
 6%
-#af00f0
+#b14c04
 
 
 shade
 7%
-#ad00ed
+#af4b04
 
 
 shade
 8%
-#ab00eb
+#ad4b04
 
 
 shade
 9%
-#a900e8
+#ab4a04
 
 
 shade
 10%
-#a700e6
+#a94904
 
 
 shade
 11%
-#a600e3
+#a74804
 
 
 shade
 12%
-#a400e0
+#a54704
 
 
 shade
 13%
-#a200de
+#a44603
 
 
 shade
 14%
-#a000db
+#a24603
 
 
 shade
 15%
-#9e00d9
+#a04503
 
 
 shade
 16%
-#9c00d6
+#9e4403
 
 
 shade
 17%
-#9a00d4
+#9c4303
 
 
 shade
 18%
-#9900d1
+#9a4203
 
 
 shade
 19%
-#9700cf
+#984203
 
 
 shade
 20%
-#9500cc
+#964103
 
 
 shade
 21%
-#9300c9
+#954003
 
 
 shade
 22%
-#9100c7
+#933f03
 
 
 shade
 23%
-#8f00c4
+#913e03
 
 
 shade
 24%
-#8d00c2
+#8f3e03
 
 
 shade
 25%
-#8c00bf
+#8d3d03
 
 
 shade
 26%
-#8a00bd
+#8b3c03
 
 
 shade
 27%
-#8800ba
+#893b03
 
 
 shade
 28%
-#8600b8
+#873a03
 
 
 shade
 29%
-#8400b5
+#853a03
 
 
 shade
 30%
-#8200b3
+#843903
 
 
 shade
 31%
-#8000b0
+#823803
 
 
 shade
 32%
-#7e00ad
+#803703
 
 
 shade
 33%
-#7d00ab
+#7e3603
 
 
 shade
 34%
-#7b00a8
+#7c3503
 
 
 shade
 35%
-#7900a6
+#7a3503
 
 
 shade
 36%
-#7700a3
+#783403
 
 
 shade
 37%
-#7500a1
+#763303
 
 
 shade
 38%
-#73009e
+#753202
 
 
 shade
 39%
-#71009c
+#733102
 
 
 shade
 40%
-#700099
+#713102
 
 
 shade
 41%
-#6e0096
+#6f3002
 
 
 shade
 42%
-#6c0094
+#6d2f02
 
 
 shade
 43%
-#6a0091
+#6b2e02
 
 
 shade
 44%
-#68008f
+#692d02
 
 
 shade
 45%
-#66008c
+#672d02
 
 
 shade
 46%
-#64008a
+#662c02
 
 
 shade
 47%
-#630087
+#642b02
 
 
 shade
 48%
-#610085
+#622a02
 
 
 shade
 49%
-#5f0082
+#602902
 
 
 shade
 50%
-#5d0080
+#5e2902
 
 
 shade
 51%
-#5b007d
+#5c2802
 
 
 shade
 52%
-#59007a
+#5a2702
 
 
 shade
 53%
-#570078
+#582602
 
 
 shade
 54%
-#560075
+#562502
 
 
 shade
 55%
-#540073
+#552402
 
 
 shade
 56%
-#520070
+#532402
 
 
 shade
 57%
-#50006e
+#512302
 
 
 shade
 58%
-#4e006b
+#4f2202
 
 
 shade
 59%
-#4c0069
+#4d2102
 
 
 shade
 60%
-#4a0066
+#4b2002
 
 
 shade
 61%
-#490063
+#492002
 
 
 shade
 62%
-#470061
+#471f02
 
 
 shade
 63%
-#45005e
+#461e01
 
 
 shade
 64%
-#43005c
+#441d01
 
 
 shade
 65%
-#410059
+#421c01
 
 
 shade
 66%
-#3f0057
+#401c01
 
 
 shade
 67%
-#3d0054
+#3e1b01
 
 
 shade
 68%
-#3c0052
+#3c1a01
 
 
 shade
 69%
-#3a004f
+#3a1901
 
 
 shade
 70%
-#38004d
+#381801
 
 
 shade
 71%
-#36004a
+#371701
 
 
 shade
 72%
-#340047
+#351701
 
 
 shade
 73%
-#320045
+#331601
 
 
 shade
 74%
-#300042
+#311501
 
 
 shade
 75%
-#2f0040
+#2f1401
 
 
 shade
 76%
-#2d003d
+#2d1301
 
 
 shade
 77%
-#2b003b
+#2b1301
 
 
 shade
 78%
-#290038
+#291201
 
 
 shade
 79%
-#270036
+#271101
 
 
 shade
 80%
-#250033
+#261001
 
 
 shade
 81%
-#230030
+#240f01
 
 
 shade
 82%
-#21002e
+#220f01
 
 
 shade
 83%
-#20002b
+#200e01
 
 
 shade
 84%
-#1e0029
+#1e0d01
 
 
 shade
 85%
-#1c0026
+#1c0c01
 
 
 shade
 86%
-#1a0024
+#1a0b01
 
 
 shade
 87%
-#180021
+#180b01
 
 
 shade
 88%
-#16001f
+#170a00
 
 
 shade
 89%
-#14001c
-
-
-shade
-90%
-#130019
-
-
-shade
-91%
-#110017
-
-
-shade
-92%
-#0f0014
-
-
-shade
-93%
-#0d0012
-
-
-shade
-94%
-#0b000f
-
-
-shade
-95%
-#09000d
-
-
-shade
-96%
-#07000a
-
-
-shade
-97%
-#060008
-
-
-shade
-98%
-#040005
-
-
-shade
-99%
-#020003
-
-
-shade
-100%
-#000000
+#150900
