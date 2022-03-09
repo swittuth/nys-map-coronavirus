@@ -12,6 +12,8 @@ const map = new mapboxgl.Map({
         [-67.829590,45.158801]],
     zoom: 6
 });
+map.scrollZoom.disable();
+
 let hoveredStateId = null;
 
 // promise that contains data on covid
@@ -55,20 +57,55 @@ map.on('load', () => {
 
     // render initial map
     render_map(1, 3, 2020);
-
-    slider.addEventListener('input', event => {
+    
+    
+    document.addEventListener("wheel", event => {
         let start_date = new Date("03/01/2020");
-        let days_to_add = event.target.value - 1;
-        start_date.setDate(start_date.getDate() + days_to_add); // added days to date to render map correctly
-        let current_month = start_date.getMonth() + 1;
-        let current_day = start_date.getDate();
-        let current_year = start_date.getFullYear();
-        date.innerHTML = `Date: ${current_month} ${current_day}, ${current_year}`;
 
-        map.removeLayer('nys-counties-fill-layer');
-        render_map(current_day, current_month, current_year);
+        if (event.wheelDelta < 0){
+            if (slider.value <= 711){
+                slider.value = (parseInt(slider.value) + 1).toString();
+                start_date.setDate(start_date.getDate() + parseInt(slider.value)); // added days to date to render map correctly
+                let current_month = start_date.getMonth() + 1;
+                let current_day = start_date.getDate();
+                let current_year = start_date.getFullYear();
+                date.innerHTML = `Date: ${current_month} ${current_day}, ${current_year}`;
+                map.removeLayer('nys-counties-fill-layer');
+                render_map(current_day, current_month, current_year);
+            }
+        }
+        else {
+            if (slider.value >= 0){
+                slider.value -= 1;
+                start_date.setDate(start_date.getDate() + parseInt(slider.value)); // added days to date to render map correctly
+                let current_month = start_date.getMonth() + 1;
+                let current_day = start_date.getDate();
+                let current_year = start_date.getFullYear();
+                date.innerHTML = `Date: ${current_month} ${current_day - 1}, ${current_year}`;
 
+                map.removeLayer('nys-counties-fill-layer');
+                render_map(current_day, current_month, current_year);
+            }
+        }
     });
+
+    slider.addEventListener('click', event => {
+        
+    });
+
+    // slider.addEventListener('input', event => {
+    //     let start_date = new Date("03/01/2020");
+    //     let days_to_add = event.target.value - 1;
+    //     start_date.setDate(start_date.getDate() + days_to_add); // added days to date to render map correctly
+    //     let current_month = start_date.getMonth() + 1;
+    //     let current_day = start_date.getDate();
+    //     let current_year = start_date.getFullYear();
+    //     date.innerHTML = `Date: ${current_month} ${current_day}, ${current_year}`;
+
+    //     map.removeLayer('nys-counties-fill-layer');
+    //     render_map(current_day, current_month, current_year);
+
+    // });
 
     // render map on that particular day, month and year 
     function render_map(chosen_day, chosen_month, chosen_year) {
