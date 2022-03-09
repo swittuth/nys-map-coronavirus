@@ -20,15 +20,24 @@ body {
     border-radius: 20px;
 }
 
+#controller {
+    position: absolute;
+    display: flex;
+    border: 1px solid red;
+    height: 25%;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    margin-top: 50%;
+}
+
+#slider {
+    position: relative;
+    width: 600px;
+}
+
 #title {
     position: relative;
     margin-left: 50px;
     
-}
-
-#controller {
-    position: relative;
-    margin-left: 100px;
-    /*border: 1px solid red;*/
-    width: 100%;
 }
