@@ -7,10 +7,10 @@ const map = new mapboxgl.Map({
     container: 'map',
     // https://docs.mapbox.com/api/maps/styles/ - for other styles
     style: 'mapbox://styles/mapbox/light-v10',
-    center: [-74.553223,42.726839],
-    maxBounds: [[-81.287842,40.195659],
-        [-67.829590,45.158801]],
-    zoom: 6
+    center: [-76.552734,42.767179],
+    // maxBounds: [[-81.287842,40.195659],
+    //     [-67.829590,45.158801]],
+    zoom: 6.1
 });
 map.scrollZoom.disable();
 
@@ -71,7 +71,7 @@ map.on('load', () => {
                 let current_month = start_date.getMonth() + 1;
                 let current_day = start_date.getDate();
                 let current_year = start_date.getFullYear();
-                date.innerHTML = `Date: ${current_month} ${current_day}, ${current_year}`;
+                date.innerHTML = `Date: ${start_date.toLocaleString('default', {month: 'long'})} ${current_day}, ${current_year}`;
                 map.removeLayer('nys-counties-fill-layer');
                 render_map(current_day, current_month, current_year);
             }
@@ -83,7 +83,7 @@ map.on('load', () => {
                 let current_month = start_date.getMonth() + 1;
                 let current_day = start_date.getDate();
                 let current_year = start_date.getFullYear();
-                date.innerHTML = `Date: ${current_month} ${current_day - 1}, ${current_year}`;
+                date.innerHTML = `Date: ${start_date.toLocaleString('default', {month: 'long'})} ${current_day - 1}, ${current_year}`;
 
                 map.removeLayer('nys-counties-fill-layer');
                 render_map(current_day, current_month, current_year);
@@ -98,7 +98,7 @@ map.on('load', () => {
         let current_month = start_date.getMonth() + 1;
         let current_day = start_date.getDate();
         let current_year = start_date.getFullYear();
-        date.innerHTML = `Date: ${current_month} ${current_day}, ${current_year}`;
+        date.innerHTML = `Date: ${start_date.toLocaleString('default', {month: 'long'})} ${current_day}, ${current_year}`;
 
         map.removeLayer('nys-counties-fill-layer');
         render_map(current_day, current_month, current_year);
