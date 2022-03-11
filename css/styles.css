@@ -15,15 +15,15 @@ body {
     position: absolute;
     width: 24.9%;
     height: 100%;
-    border: 1px red;
-    border-style: dashed;
+    /* border: 1px red; */
+    /* border-style: dashed; */
     border-radius: 20px;
 }
 
 #controller {
     position: absolute;
     display: flex;
-    border: 1px solid red;
+    /* border: 1px solid red; */
     height: 25%;
     width: 100%;
     align-items: center;
