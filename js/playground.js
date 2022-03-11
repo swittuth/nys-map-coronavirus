@@ -1,8 +1,12 @@
-const current_date = new Date();
-current_date.setDate(current_date.getDate() + 210);
+function sayMyName() {
+    let firstName = 'Ada';
+    let middleName = 'Bryon';
+    let lastName = 'LoveLace';
 
-console.log(current_date.getFullYear());
+    let mi = middleName.charAt(0);
 
-// getDate() is get the current day of the month 
-// getMonth() returns the index of month 0-11 -> need to add one 
-// getFullYear() to get year 
+    return console.log(firstName + mi + lastName);
+
+}
+
+sayMyName();
