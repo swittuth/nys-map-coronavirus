@@ -261,11 +261,11 @@ map.on('load', () => {
 
     //render map for TOTAL FATALITY CASES
     let county_fatal_cases = {}
+    let current_total_fatal_cases = 0;
     function extract_fatal_data(chosen_day, chosen_month, chosen_year){
         covid_fatality_data_promise.then(data => {
             county_year_fatal_cases = {};
-            let current_total_fatal_cases = 0;
-    
+            let temp_total = 0;
             let current_county = '';
 
             
@@ -276,12 +276,12 @@ map.on('load', () => {
                 let day = parseInt(date[2]);
 
                 if (chosen_year === year && chosen_month === month && chosen_day === day){
-                    current_total_fatal_cases += data[i]['Deaths by County of Residence'];
+                    temp_total += data[i]['Deaths by County of Residence'];
                 }
 
             }
 
-            total_fatal_cases.innerHTML = `Total Fatality: ${current_total_fatal_cases}`;
+            total_fatal_cases.innerHTML = `Total Fatality: ${current_total_fatal_cases.toLocaleString()}`;
         });
     }
 
