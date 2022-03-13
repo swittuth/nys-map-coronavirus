@@ -1,6 +1,7 @@
 const slider = document.getElementById('slider');
 const title = document.getElementById('title');
 const date = document.getElementById('date');
+const total_cases = document.getElementById('total-cases');
 
 mapboxgl.accessToken = 'pk.eyJ1Ijoic3dpdHR1dGgiLCJhIjoiY2t6aGZzcjZ1MDNucjJ1bnlpbGVjMHozNSJ9.wP4jf_xQ5-IDXtzRc2ECpA';
 const map = new mapboxgl.Map({
@@ -58,8 +59,16 @@ map.on('load', () => {
     // render initial map
     render_map(1, 3, 2020);
     
-    
+    // to display total number of cases when number of virus increase
+    let total_number_cases = 0;
+    let increase = true;
+    let wheel_event = false;
+    let slider_event = false;
+
     document.addEventListener("wheel", event => {
+        wheel_event = true;
+        slider_event = false;
+
         event.preventDefault();
         event.stopPropagation();
         let start_date = new Date("03/01/2020");
@@ -74,6 +83,7 @@ map.on('load', () => {
                 date.innerHTML = `Date: ${start_date.toLocaleString('default', {month: 'long'})} ${current_day}, ${current_year}`;
                 map.removeLayer('nys-counties-fill-layer');
                 render_map(current_day, current_month, current_year);
+                increase = true;
             }
         }
         else {
@@ -87,11 +97,14 @@ map.on('load', () => {
 
                 map.removeLayer('nys-counties-fill-layer');
                 render_map(current_day, current_month, current_year);
+                increase = false;
             }
         }
     }, {passive:false});
 
     slider.addEventListener('input', event => {
+        slider_event = true;
+        wheel_event = false;
         let start_date = new Date("03/01/2020");
         let days_to_add = event.target.value - 1;
         start_date.setDate(start_date.getDate() + days_to_add); // added days to date to render map correctly
@@ -119,11 +132,12 @@ map.on('load', () => {
         }
 
     });
-
+    
+    let county_year_cases = {}
     // render map on that particular day, month and year 
     function render_map(chosen_day, chosen_month, chosen_year) {
         covid_data_promise.then(data => { // array of of objects with time 
-            const county_year_cases = {};
+            county_year_cases = {};
     
             let current_county = '';
             let last_county = data[0]['County'];
@@ -133,12 +147,17 @@ map.on('load', () => {
             find the total range in python
             */
 
+            // reset value
+            if (slider_event){
+                total_number_cases = 0;
+            }
+
             for (let i = 0; i < data.length; i++){
                 let string_date = data[i]["Test Date"].split(' ')[0].split('/');
                 let month = parseInt(string_date[0]);
                 let day = parseInt(string_date[1]);
                 let year = parseInt(string_date[2]);
-                let total_positive = 0;
+                let total_county_positive = 0;
                 
                 if (month === chosen_month && day === chosen_day && year === chosen_year){
                     current_county = data[i]['County'];
@@ -147,16 +166,30 @@ map.on('load', () => {
                         last_county = data[i - 1]['County'];
                     }
                     if (current_county !== last_county){
-                        county_year_cases[last_county] = total_positive;
-                        total_positive = 0;
+                        county_year_cases[last_county] = total_county_positive;
+                        total_county_positive = 0;
                     }
-    
-                    total_positive += data[i]["Cumulative Number of Positives"];
+                    total_county_positive += data[i]["Cumulative Number of Positives"];
+                    if (wheel_event){
+                        if (increase){
+                            total_number_cases += data[i]["New Positives"];
+                        }
+                        else{
+                            total_number_cases -= data[i + 1]["New Positives"];
+                        }
+
+                        total_cases.innerHTML = 'Cumulative Cases: ' + total_number_cases.toLocaleString();
+                    }
+                    else if (slider_event){
+                        total_number_cases += total_county_positive;
+                        total_cases.innerHTML = 'Cumulative Cases: ' + total_number_cases.toLocaleString();
+                    }
+
                 }
                 else {
                     continue;
                 }
-                county_year_cases[current_county] = total_positive; // to account for the last county: Yates
+                county_year_cases[current_county] = total_county_positive; // to account for the last county: Yates
             }
     
             // most dense - concetrated range of virus is around 100,000 (use 150 colors for this)
@@ -211,13 +244,13 @@ map.on('load', () => {
             }, 'nys-counties-name-layer');
 
             map.on('click', 'nys-counties-fill-layer', e => {
-                let name_clicked = e.features['0']['properties']["NAME"];
-                let total_cases = county_year_cases[name_clicked];
-
                 
-                title.innerHTML = `${name_clicked}: ${total_cases}`;
                 
             });
+
+            // reset all events flag value
+            wheel_event = false;
+            slider_event = false;
         });
     }
 
@@ -244,6 +277,11 @@ map.on('load', () => {
         },
     });
 
+
+    const popup = new mapboxgl.Popup({
+        closeButton: false,
+        closeOnClick: false
+    })
     map.on("mousemove", 'nys-counties-fill-layer', (e) => {
         map.getCanvas().style.cursor = 'pointer';
         if (e.features.length > 0) {
@@ -259,6 +297,12 @@ map.on('load', () => {
                 { hover: true },
             );
         }
+        let coordinates = e.lngLat
+        let county_name = e.features[0].properties['NAME'];
+        let cases_popup = county_year_cases[county_name].toLocaleString();
+        let description = `<h1>${county_name}</h1><h3>${cases_popup}</h3>`
+        
+        popup.setLngLat(coordinates).setHTML(description).addTo(map);
     });
 
 
@@ -271,6 +315,8 @@ map.on('load', () => {
             );
         }
         hoveredStateId = null;
+
+        popup.remove();
     });
 
     map.on("mousemove", 'nys-counties-line-layer', (e) => {
