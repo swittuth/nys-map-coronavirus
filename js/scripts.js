@@ -1,17 +1,18 @@
 const slider = document.getElementById('slider');
 const title = document.getElementById('title');
 const date = document.getElementById('date');
-const total_cases = document.getElementById('total-cases');
+const total_positive_cases = document.getElementById('total-positive-cases');
+const total_fatal_cases = document.getElementById('total-fatal-cases');
 
 mapboxgl.accessToken = 'pk.eyJ1Ijoic3dpdHR1dGgiLCJhIjoiY2t6aGZzcjZ1MDNucjJ1bnlpbGVjMHozNSJ9.wP4jf_xQ5-IDXtzRc2ECpA';
 const map = new mapboxgl.Map({
     container: 'map',
     // https://docs.mapbox.com/api/maps/styles/ - for other styles
     style: 'mapbox://styles/mapbox/dark-v10',
-    center: [-77.025146,42.350425],
+    center: [-75.921021,42.138968],
     // maxBounds: [[-81.287842,40.195659],
     //     [-67.829590,45.158801]],
-    zoom: 5.7
+    zoom: 5.9
 });
 map.scrollZoom.disable();
 
@@ -179,11 +180,11 @@ map.on('load', () => {
                             total_number_cases -= data[i + 1]["New Positives"];
                         }
 
-                        total_cases.innerHTML = 'Cumulative Cases: ' + total_number_cases.toLocaleString();
+                        total_positive_cases.innerHTML = 'Cumulative Positive Cases: ' + total_number_cases.toLocaleString();
                     }
                     else if (slider_event){
                         total_number_cases += total_county_positive;
-                        total_cases.innerHTML = 'Cumulative Cases: ' + total_number_cases.toLocaleString();
+                        total_positive_cases.innerHTML = 'Cumulative Positive Cases: ' + total_number_cases.toLocaleString();
                     }
 
                 }
@@ -192,6 +193,8 @@ map.on('load', () => {
                 }
                 county_year_positive_cases[current_county] = total_county_positive; // to account for the last county: Yates
             }
+
+            extract_fatal_data(chosen_day, chosen_month, chosen_year);
     
             // most dense - concetrated range for TOTAL POSITIVE CASES of virus is around 100,000 (use 150 colors for this)
             // second shows arround 400,000 (35 colors)
@@ -256,126 +259,31 @@ map.on('load', () => {
     }
     // end rendering for TOTAL POSITIVE CASES
 
-    // render map for TOTAL FATALITY CASES
-    // let county_fatal_cases = {}
-    // function render_fatal_map(chosen_day, chosen_month, chosen_year){
-    //     covid_fatality_data_promise.then(data => {
-    //         county_year_fatal_cases = {};
+    //render map for TOTAL FATALITY CASES
+    let county_fatal_cases = {}
+    function extract_fatal_data(chosen_day, chosen_month, chosen_year){
+        covid_fatality_data_promise.then(data => {
+            county_year_fatal_cases = {};
+            let current_total_fatal_cases = 0;
     
-    //         let current_county = '';
-    //         let last_county = data[0]['County'];
-    
-    //         /*
-    //         render by month and day by checking for month and day 
-    //         find the total range in python
-    //         */
+            let current_county = '';
 
-    //         // reset value
-    //         if (slider_event){
-    //             total_number_cases = 0;
-    //         }
+            
+            for (let i = 0; i < data.length; i++){
+                let date = data[i]['Report Date'].split('-');
+                let year = parseInt(date[0]);
+                let month = parseInt(date[1]);
+                let day = parseInt(date[2]);
 
-    //         for (let i = 0; i < data.length; i++){
-    //             let string_date = data[i]["Report Date"].split(' ')[0].split('/');
-    //             let month = parseInt(string_date[0]);
-    //             let day = parseInt(string_date[1]);
-    //             let year = parseInt(string_date[2]);
-    //             let total_county_positive = 0;
-                
-    //             if (month === chosen_month && day === chosen_day && year === chosen_year){
-    //                 current_county = data[i]['County'];
-                    
-    //                 if (i > 0){
-    //                     last_county = data[i - 1]['County'];
-    //                 }
-    //                 if (current_county !== last_county){
-    //                     county_year_positive_cases[last_county] = total_county_positive;
-    //                     total_county_positive = 0;
-    //                 }
-    //                 total_county_positive += data[i]["Cumulative Number of Positives"];
-    //                 if (wheel_event){
-    //                     if (increase){
-    //                         total_number_cases += data[i]["New Positives"];
-    //                     }
-    //                     else{
-    //                         total_number_cases -= data[i + 1]["New Positives"];
-    //                     }
+                if (chosen_year === year && chosen_month === month && chosen_day === day){
+                    current_total_fatal_cases += data[i]['Deaths by County of Residence'];
+                }
 
-    //                     total_cases.innerHTML = 'Cumulative Cases: ' + total_number_cases.toLocaleString();
-    //                 }
-    //                 else if (slider_event){
-    //                     total_number_cases += total_county_positive;
-    //                     total_cases.innerHTML = 'Cumulative Cases: ' + total_number_cases.toLocaleString();
-    //                 }
+            }
 
-    //             }
-    //             else {
-    //                 continue;
-    //             }
-    //             county_year_positive_cases[current_county] = total_county_positive; // to account for the last county: Yates
-    //         }
-    
-    //         // most dense - concetrated range for TOTAL POSITIVE CASES of virus is around 100,000 (use 150 colors for this)
-    //         // second shows arround 400,000 (35 colors)
-    //         // highest is 680,000 (10 colors)
-    //         const threshold_one = 100000;
-    //         const threshold_two = 400000;
-    //         const threshold_three = 676316;
-    //         const first_num_colors = 140;
-    //         const second_num_colors = 30;
-    //         const third_num_colors = tints_array.length - first_num_colors - second_num_colors;
-    //         const first_color_div = Math.floor(100000 / first_num_colors);
-    //         const second_color_div = Math.floor((threshold_two - threshold_one) / second_num_colors);
-    //         const third_color_div = Math.floor(threshold_three / third_num_colors);
-    //         const matchExpression = ['match', ['get', 'NAME']];
-    //         for (const key in county_year_positive_cases){
-                
-    //             let color;
-    //             let cases = county_year_positive_cases[key];
-
-    //             if (cases <= threshold_one){
-    //                 color = tints_array[Math.floor(cases / first_color_div)];
-                    
-    //             }
-    //             else if (cases <= threshold_two){
-    //                 color = tints_array[first_num_colors + Math.floor(cases / second_color_div)];
-    //             }
-    //             else {
-    //                 color = tints_array[first_num_colors + second_num_colors + Math.floor(cases / third_color_div)];
-    //             }
-                
-    //             matchExpression.push(key, color)
-
-    //         }
-    //         matchExpression.push('#000000');
-    
-    //         map.addLayer({
-    //             'id': 'nys-counties-fill-layer',
-    //             'type': 'fill',
-    //             'source': 'nys-counties',
-    //             'layout': {},
-    //             'paint': {
-    //                 'fill-color': matchExpression,
-    //                 'fill-opacity': [
-    //                     'case',
-    //                     ['boolean', ['feature-state', 'hover'], false], 
-    //                     1, 
-    //                     0.85
-    //                 ],
-    //                 'fill-outline-color': 'coral'
-    //             },
-    //         }, 'nys-counties-name-layer');
-
-    //         map.on('click', 'nys-counties-fill-layer', e => {
-                
-                
-    //         });
-
-    //         // reset all events flag value
-    //         wheel_event = false;
-    //         slider_event = false;
-    //     });
-    // }
+            total_fatal_cases.innerHTML = `Total Fatality: ${current_total_fatal_cases}`;
+        });
+    }
 
     map.addLayer({
         'id': 'nys-counties-line-layer',
