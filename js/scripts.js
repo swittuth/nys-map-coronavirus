@@ -20,7 +20,7 @@ let hoveredStateId = null;
 
 // promise that contains data on covid
 const covid_positive_data_promise = fetch("./data_files/nys_covid_positive_data_adjusted.json").then(e => e.json());
-const covid_fatality_data_promise = fetch("./data_files/nys_covid_fatalities_data.json").then(e => e.json());
+const covid_fatality_data_promise = fetch("./data_files/nys_covid_fatal_data.json").then(e => e.json());
 
 const state_list = ['Albany', 'Allegany', 'Bronx', 'Broome', 'Cattaraugus', 'Cayuga', 'Chautauqua', 'Chemung', 'Chenango', 
                     'Clinton', 'Columbia', 'Cortland', 'Delaware', 'Dutchess', 'Erie', 'Essex', 'Franklin', 'Fulton', 'Genesee', 
@@ -259,24 +259,30 @@ map.on('load', () => {
     }
     // end rendering for TOTAL POSITIVE CASES
 
+    // NEED TO DOUBLE CHECK DATA MIGHT BE WRONG
     //render map for TOTAL FATALITY CASES
     let county_fatal_cases = {}
-    let current_total_fatal_cases = 0;
     function extract_fatal_data(chosen_day, chosen_month, chosen_year){
         covid_fatality_data_promise.then(data => {
             county_year_fatal_cases = {};
-            let temp_total = 0;
+            let current_total_fatal_cases = 0;
             let current_county = '';
 
             
             for (let i = 0; i < data.length; i++){
-                let date = data[i]['Report Date'].split('-');
-                let year = parseInt(date[0]);
-                let month = parseInt(date[1]);
-                let day = parseInt(date[2]);
-
+                let date = data[i]['Report Date'].split('/');
+                let month = parseInt(date[0]);
+                let day = parseInt(date[1]);
+                let year = parseInt(date[2]);
+                
                 if (chosen_year === year && chosen_month === month && chosen_day === day){
-                    temp_total += data[i]['Deaths by County of Residence'];
+
+                    if (data[i]['County'] !== "Statewide Total"){
+                        current_total_fatal_cases += data[i]['Place of Fatality'];
+                    }
+
+                    // need to set a separate condition of 04 15 2020 due to a weird error in data
+                    
                 }
 
             }

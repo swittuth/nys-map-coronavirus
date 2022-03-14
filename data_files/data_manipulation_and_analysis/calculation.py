@@ -1,22 +1,21 @@
 def main():
-    fatal_data_file = open('../nys_covid_fatalities_by_county.json')
-    sub1 = 'Place of Fatality'
-    sub2 = 'Deaths by County of Residence'
+    fatal_data_file = open('../csv_number_files/nys_covid_fatal_data.csv')
+
 
     line = fatal_data_file.readline()
-
+    substring = 'Albany'
     t1 = 0
-    t2 = 0
     while line != '':
-        if sub1 in line:
-            t1 += int(line.split(" ")[-1].rstrip(',\n'))
-        elif sub2 in line:
-            t2 += int(line.split(" ")[-1].rstrip('\n'))
+        string_array = line.split(',')
+        cases = string_array[3]
+        if substring in string_array:
+                print(cases)
+                t1 += int(cases)
+
         line = fatal_data_file.readline()
 
     # t2 doesn't account for those who passed away out of state
     print(t1)
-    print(t2)
 
     fatal_data_file.close()
 
