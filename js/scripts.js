@@ -21,6 +21,7 @@ let hoveredStateId = null;
 // promise that contains data on covid
 const covid_positive_data_promise = fetch("./data_files/nys_covid_positive_data_adjusted.json").then(e => e.json());
 const covid_fatality_data_promise = fetch("./data_files/nys_covid_fatal_data.json").then(e => e.json());
+const covid_hospitalization_data_promise = fetch("./data_files/nys_hospitalization_age_group_by_county.json").then(e => e.json());
 
 const state_list = ['Albany', 'Allegany', 'Bronx', 'Broome', 'Cattaraugus', 'Cayuga', 'Chautauqua', 'Chemung', 'Chenango', 
                     'Clinton', 'Columbia', 'Cortland', 'Delaware', 'Dutchess', 'Erie', 'Essex', 'Franklin', 'Fulton', 'Genesee', 
@@ -259,9 +260,8 @@ map.on('load', () => {
     }
     // end rendering for TOTAL POSITIVE CASES
 
-    // NEED TO DOUBLE CHECK DATA MIGHT BE WRONG
     //render map for TOTAL FATALITY CASES
-    let county_fatal_cases = {}
+    let county_fatal_cases = {} // NEED TO UPATE AND INCLUDE DATA INTO OBJECT OF COUNTIES AND FATAL CASES
     function extract_fatal_data(chosen_day, chosen_month, chosen_year){
         covid_fatality_data_promise.then(data => {
             county_year_fatal_cases = {};
@@ -289,12 +289,14 @@ map.on('load', () => {
 
                     }
                 }
-
             }
 
             total_fatal_cases.innerHTML = `Total Fatality: ${current_total_fatal_cases.toLocaleString()}`;
         });
     }
+    // end of extract data for fatal-cases on map
+
+
 
     map.addLayer({
         'id': 'nys-counties-line-layer',
