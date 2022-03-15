@@ -26,8 +26,8 @@ let hoveredStateId = null;
 
 // promise that contains data on covid
 const covid_positive_data_promise = fetch("./data_files/nys_covid_positive_data_adjusted.json").then(e => e.json());
-const covid_fatality_data_promise = fetch("./data_files/nys_covid_fatal_data.json").then(e => e.json());
-const covid_hospitalization_data_promise = fetch("./data_files/nys_hospitalization_age_group_by_county_adjusted.json").then(e => e.json());
+const covid_fatality_data_promise = fetch("./data_files/nys_covid_fatal_data_adjusted.json").then(e => e.json());
+const covid_hospitalization_data_promise = fetch("./data_files/nys_hospitalization_age_group_by_county_adjusted_v2.json").then(e => e.json());
 
 const state_list = ['Albany', 'Allegany', 'Bronx', 'Broome', 'Cattaraugus', 'Cayuga', 'Chautauqua', 'Chemung', 'Chenango', 
                     'Clinton', 'Columbia', 'Cortland', 'Delaware', 'Dutchess', 'Erie', 'Essex', 'Franklin', 'Fulton', 'Genesee', 
@@ -273,10 +273,10 @@ map.on('load', () => {
         covid_fatality_data_promise.then(data => {
             county_year_fatal_cases = {};
             let current_total_fatal_cases = 0;
-            let current_county = '';
 
             
             for (let i = 0; i < data.length; i++){
+                current_county = data[i]['County'];
                 let date = data[i]['Report Date'].split('/');
                 let month = parseInt(date[0]);
                 let day = parseInt(date[1]);
@@ -284,6 +284,9 @@ map.on('load', () => {
                 
                 
                 if (chosen_year === year && chosen_month === month && chosen_day === day){
+
+                    county_fatal_cases[current_county] = data[i]['Place of Fatality'];
+
                     // to account for an error on the data of April 15th, 2020 where the number of cases doubled more than it should have 
                     if (chosen_year === 2020 && chosen_day === 15 && chosen_month === 4 && data[i]['County'] === 'Statewide Total'){
                         current_total_fatal_cases = data[i]['Place of Fatality'];
@@ -298,6 +301,8 @@ map.on('load', () => {
                 }
             }
 
+            
+
             total_fatal_cases.innerHTML = `Total Fatality: ${current_total_fatal_cases.toLocaleString()}`;
         });
     }
@@ -305,6 +310,7 @@ map.on('load', () => {
 
     
     // start to extract data for hospitalization rate
+    const hospital_cases = {}
     function extract_hospitalization_data(chosen_month, chosen_day, chosen_year) {
         covid_hospitalization_data_promise.then(data => {
             let hospitalization_cases = 0;
@@ -325,6 +331,7 @@ map.on('load', () => {
                 const year = parseInt(date_array[2]);
 
                 if (chosen_month === month && chosen_day === day && chosen_year === year){
+                    hospital_cases[data[i]['Facility County']] = data[i]['Patients Currently Hospitalized'];
                     hospitalization_cases += data[i]['Patients Currently Hospitalized'];
                     icu_cases += data[i]["Patients Currently in ICU"];
                     patient_1_4 += data[i]["Patients Age Less Than 1 Year"];
@@ -340,17 +347,17 @@ map.on('load', () => {
                 // fix error in data since there are strings instead of number
             }
 
-            total_hospitalization_cases.innerHTML = `Total Hostpitalization: ${hospitalization_cases}`;
-            total_icu_cases.innerHTML = `Total Patients in ICU: ${icu_cases}`;
+            total_hospitalization_cases.innerHTML = `Total Hostpitalization: ${hospitalization_cases.toLocaleString()}`;
+            total_icu_cases.innerHTML = `Total Patients in ICU: ${icu_cases.toLocaleString()}`;
             group_age.innerHTML = `
-            Patients Age 1 to 4 Years: ${patient_1_4} <br>
-            Patients Age 5 to 19 Years: ${patient_5_19} <br>
-            Patients Age 20 to 44 Years: ${patient_20_44} <br>
-            Patients Age 45 to 54 Years: ${patient_45_54} <br>
-            Patients Age 55 to 64 Years: ${patient_55_64} <br>
-            Patients Age 65 to 74 Years: ${patient_65_74} <br>
-            Patients Age 75 to 84 Years: ${patient_75_84} <br>
-            Patients Age Greater Than Years: ${patient_over_85} <br>`
+            Patients Age 1 to 4 Years: ${patient_1_4.toLocaleString()} <br>
+            Patients Age 5 to 19 Years: ${patient_5_19.toLocaleString()} <br>
+            Patients Age 20 to 44 Years: ${patient_20_44.toLocaleString()} <br>
+            Patients Age 45 to 54 Years: ${patient_45_54.toLocaleString()} <br>
+            Patients Age 55 to 64 Years: ${patient_55_64.toLocaleString()} <br>
+            Patients Age 65 to 74 Years: ${patient_65_74.toLocaleString()} <br>
+            Patients Age 75 to 84 Years: ${patient_75_84.toLocaleString()} <br>
+            Patients Age Greater Than Years: ${patient_over_85.toLocaleString()} <br>`
         });
     }
 
@@ -397,10 +404,31 @@ map.on('load', () => {
                 { hover: true },
             );
         }
+
+        // total positive cases
         let coordinates = e.lngLat
         let county_name = e.features[0].properties['NAME'];
         let cases_popup = county_year_positive_cases[county_name].toLocaleString();
-        let description = `<h1>${county_name}</h1><h3>${cases_popup}</h3>`
+        let fatal_popup;
+        try{
+            fatal_popup = county_fatal_cases[county_name].toLocaleString();
+        }
+        catch (e){
+            fatal_popup = 0;
+        }
+        let hospitalize_popup;
+        try{
+            hospitalize_popup = hospital_cases[county_name].toLocaleString();
+        }
+        catch (e){
+            hospitalize_popup = 0;
+        }
+
+        let description = `<h1>${county_name}</h1>
+        <h3>Total Cases: ${cases_popup}</h3><br>
+        <h3>Total Hospitalization: ${hospitalize_popup}</h3><br>
+        <h3>Total Fatality: ${fatal_popup}</h3>`
+
         
         popup.setLngLat(coordinates).setHTML(description).addTo(map);
     });
@@ -449,3 +477,5 @@ map.on('load', () => {
     });
 
 });
+
+// DOUBLE CHECK DATA AGAIN BECAUSE HOSPITALIZATION AND FATALITY CASES ALREADY BEGIN ON MARCH 2ND AND 3RD OF 2020 
