@@ -275,14 +275,19 @@ map.on('load', () => {
                 let day = parseInt(date[1]);
                 let year = parseInt(date[2]);
                 
+                
                 if (chosen_year === year && chosen_month === month && chosen_day === day){
-
-                    if (data[i]['County'] !== "Statewide Total"){
-                        current_total_fatal_cases += data[i]['Place of Fatality'];
+                    // to account for an error on the data of April 15th, 2020 where the number of cases doubled more than it should have 
+                    if (chosen_year === 2020 && chosen_day === 15 && chosen_month === 4 && data[i]['County'] === 'Statewide Total'){
+                        current_total_fatal_cases = data[i]['Place of Fatality'];
+                        break;
                     }
+                    else{
+                        if (data[i]['County'] !== 'Statewide Total'){
+                            current_total_fatal_cases += data[i]['Place of Fatality'];
+                        }
 
-                    // need to set a separate condition of 04 15 2020 due to a weird error in data
-                    
+                    }
                 }
 
             }
