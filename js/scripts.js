@@ -1,8 +1,14 @@
 const slider = document.getElementById('slider');
 const title = document.getElementById('title');
 const date = document.getElementById('date');
+
 const total_positive_cases = document.getElementById('total-positive-cases');
+
 const total_fatal_cases = document.getElementById('total-fatal-cases');
+
+const total_hospitalization_cases = document.getElementById('total-hospitalization-cases');
+const total_icu_cases = document.getElementById('total-icu-patients');
+const group_age = document.getElementById('group-age');
 
 mapboxgl.accessToken = 'pk.eyJ1Ijoic3dpdHR1dGgiLCJhIjoiY2t6aGZzcjZ1MDNucjJ1bnlpbGVjMHozNSJ9.wP4jf_xQ5-IDXtzRc2ECpA';
 const map = new mapboxgl.Map({
@@ -21,7 +27,7 @@ let hoveredStateId = null;
 // promise that contains data on covid
 const covid_positive_data_promise = fetch("./data_files/nys_covid_positive_data_adjusted.json").then(e => e.json());
 const covid_fatality_data_promise = fetch("./data_files/nys_covid_fatal_data.json").then(e => e.json());
-const covid_hospitalization_data_promise = fetch("./data_files/nys_hospitalization_age_group_by_county.json").then(e => e.json());
+const covid_hospitalization_data_promise = fetch("./data_files/nys_hospitalization_age_group_by_county_adjusted.json").then(e => e.json());
 
 const state_list = ['Albany', 'Allegany', 'Bronx', 'Broome', 'Cattaraugus', 'Cayuga', 'Chautauqua', 'Chemung', 'Chenango', 
                     'Clinton', 'Columbia', 'Cortland', 'Delaware', 'Dutchess', 'Erie', 'Essex', 'Franklin', 'Fulton', 'Genesee', 
@@ -196,6 +202,7 @@ map.on('load', () => {
             }
 
             extract_fatal_data(chosen_day, chosen_month, chosen_year);
+            extract_hospitalization_data(chosen_month, chosen_day, chosen_year);
     
             // most dense - concetrated range for TOTAL POSITIVE CASES of virus is around 100,000 (use 150 colors for this)
             // second shows arround 400,000 (35 colors)
@@ -296,7 +303,56 @@ map.on('load', () => {
     }
     // end of extract data for fatal-cases on map
 
+    
+    // start to extract data for hospitalization rate
+    function extract_hospitalization_data(chosen_month, chosen_day, chosen_year) {
+        covid_hospitalization_data_promise.then(data => {
+            let hospitalization_cases = 0;
+            let icu_cases = 0;
+            let patient_1_4 = 0;
+            let patient_5_19 = 0;
+            let patient_20_44 = 0;
+            let patient_45_54 = 0;
+            let patient_55_64 = 0;
+            let patient_65_74 = 0;
+            let patient_75_84 = 0;
+            let patient_over_85 = 0;
 
+            for (let i = 0; i < data.length; i++){
+                const date_array = data[i]['As of Date'].split('/');
+                const month = parseInt(date_array[0]);
+                const day = parseInt(date_array[1]);
+                const year = parseInt(date_array[2]);
+
+                if (chosen_month === month && chosen_day === day && chosen_year === year){
+                    hospitalization_cases += data[i]['Patients Currently Hospitalized'];
+                    icu_cases += data[i]["Patients Currently in ICU"];
+                    patient_1_4 += data[i]["Patients Age Less Than 1 Year"];
+                    patient_5_19 += data[i]["Patients Age 1 To 4 Years"];
+                    patient_20_44 += data[i]["Patients Age 5 to 19 Years"];
+                    patient_45_54 += data[i]["Patients Age 45 to 54 Years"];
+                    patient_55_64 += data[i]["Patients Age 55 to 64 Years"];
+                    patient_65_74 += data[i]["Patients Age 65 to 74 Years"];
+                    patient_75_84 += data[i]["Patients Age 75 to 84 Years"];
+                    patient_over_85 += data[i]["Patients Age Greater Than 85 Years"];
+                }
+
+                // fix error in data since there are strings instead of number
+            }
+
+            total_hospitalization_cases.innerHTML = `Total Hostpitalization: ${hospitalization_cases}`;
+            total_icu_cases.innerHTML = `Total Patients in ICU: ${icu_cases}`;
+            group_age.innerHTML = `
+            Patients Age 1 to 4 Years: ${patient_1_4} <br>
+            Patients Age 5 to 19 Years: ${patient_5_19} <br>
+            Patients Age 20 to 44 Years: ${patient_20_44} <br>
+            Patients Age 45 to 54 Years: ${patient_45_54} <br>
+            Patients Age 55 to 64 Years: ${patient_55_64} <br>
+            Patients Age 65 to 74 Years: ${patient_65_74} <br>
+            Patients Age 75 to 84 Years: ${patient_75_84} <br>
+            Patients Age Greater Than Years: ${patient_over_85} <br>`
+        });
+    }
 
     map.addLayer({
         'id': 'nys-counties-line-layer',
