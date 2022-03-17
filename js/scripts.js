@@ -9,6 +9,7 @@ const total_fatal_cases = document.getElementById('total-fatal-cases');
 const total_hospitalization_cases = document.getElementById('total-hospitalization-cases');
 const total_icu_cases = document.getElementById('total-icu-patients');
 const group_age = document.getElementById('group-age');
+const vaccinated = document.getElementById('vaccination-record');
 
 mapboxgl.accessToken = 'pk.eyJ1Ijoic3dpdHR1dGgiLCJhIjoiY2t6aGZzcjZ1MDNucjJ1bnlpbGVjMHozNSJ9.wP4jf_xQ5-IDXtzRc2ECpA';
 const map = new mapboxgl.Map({
@@ -28,6 +29,7 @@ let hoveredStateId = null;
 const covid_positive_data_promise = fetch("./data_files/nys_covid_positive_data_adjusted.json").then(e => e.json());
 const covid_fatality_data_promise = fetch("./data_files/nys_covid_fatal_data_adjusted.json").then(e => e.json());
 const covid_hospitalization_data_promise = fetch("./data_files/nys_hospitalization_age_group_by_county_adjusted_v2.json").then(e => e.json());
+const covid_vaccination_data_promise = fetch("./data_files/nys_county_vaccination_record.json").then(e => e.json());
 
 const state_list = ['Albany', 'Allegany', 'Bronx', 'Broome', 'Cattaraugus', 'Cayuga', 'Chautauqua', 'Chemung', 'Chenango', 
                     'Clinton', 'Columbia', 'Cortland', 'Delaware', 'Dutchess', 'Erie', 'Essex', 'Franklin', 'Fulton', 'Genesee', 
@@ -361,6 +363,24 @@ map.on('load', () => {
         });
     }
 
+    const county_first_dose = {}
+    const county_full_dose = {}
+    function extract_vaccination_data (chosen_month, chosen_day, chosen_year) {
+        covid_vaccination_data_promise.then(data => {
+            for (let i = 0; i < data.length; i++){
+                const date_array = data[i]["Report as of"].split('/');
+                const month = parseInt(date_array[0]);
+                const day = parseInt(date_array[1]);
+                const year = parseInt(date_array[2]);
+
+                if (chosen_month === month && chosen_day === day && chosen_year === year){
+                    county_first_dose[data["County"]] = data[i]["First Dose"];
+                    county_full_dose[data["County"]] = data[i]["Series Complete"];
+                }
+            }
+        });
+    }
+
     map.addLayer({
         'id': 'nys-counties-line-layer',
         'type': 'line', 
@@ -478,4 +498,7 @@ map.on('load', () => {
 
 });
 
+// ADD VACCINATION DATA INTO THE MAP
 // DOUBLE CHECK DATA AGAIN BECAUSE HOSPITALIZATION AND FATALITY CASES ALREADY BEGIN ON MARCH 2ND AND 3RD OF 2020 
+
+// AFTER ADDING VACINATION DATA SHOULD WORK ON INCOPORATING D3.js into the map to display data
