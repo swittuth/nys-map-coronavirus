@@ -205,6 +205,7 @@ map.on('load', () => {
 
             extract_fatal_data(chosen_day, chosen_month, chosen_year);
             extract_hospitalization_data(chosen_month, chosen_day, chosen_year);
+            extract_vaccination_data(chosen_month, chosen_day, chosen_year);
     
             // most dense - concetrated range for TOTAL POSITIVE CASES of virus is around 100,000 (use 150 colors for this)
             // second shows arround 400,000 (35 colors)
@@ -367,17 +368,29 @@ map.on('load', () => {
     const county_full_dose = {}
     function extract_vaccination_data (chosen_month, chosen_day, chosen_year) {
         covid_vaccination_data_promise.then(data => {
+            let first_dose = 0;
+            let full_dose = 0;
+
             for (let i = 0; i < data.length; i++){
                 const date_array = data[i]["Report as of"].split('/');
                 const month = parseInt(date_array[0]);
                 const day = parseInt(date_array[1]);
                 const year = parseInt(date_array[2]);
 
+                // get total of vaccination record by calculating when day is passed  
                 if (chosen_month === month && chosen_day === day && chosen_year === year){
                     county_first_dose[data["County"]] = data[i]["First Dose"];
                     county_full_dose[data["County"]] = data[i]["Series Complete"];
+                    first_dose += data[i]["First Dose"];
+                    full_dose += data[i]["Series Complete"];
                 }
+
             }
+
+            vaccinated.innerHTML = `First Dose Received: ${first_dose.toLocaleString()} <br>
+                    Full Dose Received: ${full_dose.toLocaleString()}`;
+
+
         });
     }
 
@@ -430,6 +443,8 @@ map.on('load', () => {
         let county_name = e.features[0].properties['NAME'];
         let cases_popup = county_year_positive_cases[county_name].toLocaleString();
         let fatal_popup;
+        let first_dose_popup;
+        let full_dose_popup;
         try{
             fatal_popup = county_fatal_cases[county_name].toLocaleString();
         }
@@ -443,11 +458,21 @@ map.on('load', () => {
         catch (e){
             hospitalize_popup = 0;
         }
+        try {
+            first_dose_popup = county_first_dose[county_name].toLocaleString();
+            full_dose_popup = county_full_dose[county_name].toLocaleString();
+        }
+        catch (e){
+            first_dose_popup = 0;
+            full_dose_popup = 0;
+        }
 
         let description = `<h1>${county_name}</h1>
         <h3>Total Cases: ${cases_popup}</h3><br>
         <h3>Total Hospitalization: ${hospitalize_popup}</h3><br>
-        <h3>Total Fatality: ${fatal_popup}</h3>`
+        <h3>Total Fatality: ${fatal_popup}</h3><br>
+        <h3>Total First Dose: ${first_dose_popup}</h3><br>
+        <h3>Total Full Dose: ${full_dose_popup}</h3>`
 
         
         popup.setLngLat(coordinates).setHTML(description).addTo(map);
