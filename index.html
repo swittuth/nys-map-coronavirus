@@ -41,12 +41,23 @@
                     First Dose Received: <br>
                     Full Dose Received: 
                 </p>
+
+                <div id="controller">
+                    <input id = 'slider' class = 'row' 
+                        type = 'range' min = '1' max = '713' step = '1' value = '1'>
+                </div>
+                
+
+                
             </div>
         </div>
 
-        <div id = controller>
-            <input id = 'slider' class = 'row' 
-            type = 'range' min = '1' max = '713' step = '1' value = '1'>
+        <div id = "data-area">
+            
+
+            <svg id="data-info">
+                <line x1="50" y1="50" x2="300" y2="50" stroke="black"/>
+            </svg>
         </div>
         
         <script src = "./js/scripts.js"></script>

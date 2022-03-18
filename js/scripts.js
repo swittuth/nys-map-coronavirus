@@ -453,6 +453,7 @@ map.on('load', () => {
         }
         let hospitalize_popup;
         try{
+            // need to adjust the name for New York in json file for hospitalization cases 
             hospitalize_popup = hospital_cases[county_name].toLocaleString();
         }
         catch (e){
