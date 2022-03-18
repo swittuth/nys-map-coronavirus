@@ -379,8 +379,8 @@ map.on('load', () => {
 
                 // get total of vaccination record by calculating when day is passed  
                 if (chosen_month === month && chosen_day === day && chosen_year === year){
-                    county_first_dose[data["County"]] = data[i]["First Dose"];
-                    county_full_dose[data["County"]] = data[i]["Series Complete"];
+                    county_first_dose[data[i]["County"]] = data[i]["First Dose"];
+                    county_full_dose[data[i]["County"]] = data[i]["Series Complete"];
                     first_dose += data[i]["First Dose"];
                     full_dose += data[i]["Series Complete"];
                 }
