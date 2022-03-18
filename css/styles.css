@@ -34,14 +34,22 @@ body {
     height: 20%;
     width: 75%;
     border: 1px solid red;
-    align-items: center;
-    justify-content: center;
     margin-left: 25%;
+}
+
+#total-positive-chart {
+    position: absolute;
+    background-color: beige;
+    border: 1px solid orange;
+    height: 100%;
+    width: 25%;
+    margin-left: 0%;
+    
 }
 
 #data-info{
     position: absolute;
-    height: 100%;
+    height: 25%;
     width: 100%;
     border: 1px blue solid;
 }
