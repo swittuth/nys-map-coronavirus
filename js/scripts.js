@@ -1,6 +1,7 @@
 const slider = document.getElementById('slider');
 const title = document.getElementById('title');
 const date = document.getElementById('date');
+const div_data_area = document.getElementById("data-area");
 
 const total_positive_cases = document.getElementById('total-positive-cases');
 
@@ -361,6 +362,24 @@ map.on('load', () => {
             Patients Age 65 to 74 Years: ${patient_65_74.toLocaleString()} <br>
             Patients Age 75 to 84 Years: ${patient_75_84.toLocaleString()} <br>
             Patients Age Greater Than Years: ${patient_over_85.toLocaleString()} <br>`
+
+            // preparing data for the pie-chart
+            const age_group_data = [patient_1_4, patient_5_19, patient_20_44, patient_45_54, patient_55_64, patient_65_74, patient_over_85];
+            let svg_age_group = d3.select("#patient-age-pie-chart");
+
+            // creating the pie-chart
+            let width = (parseFloat(svg_age_group.attr("width")) / 100)  * div_data_area.clientWidth; 
+            let height = (parseFloat(svg_age_group.attr("height")) / 100) * div_data_area.clientHeight;
+            let radius = Math.min(width, height) / 2;
+            let g = svg_age_group.append("g").attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+            let color = d3.scaleOrdinal(['#5C4B51','#8CBEB2','#F2EBBF','#F3B562','#F06060', '#F26601', '#66CBDF', '#886F61']);
+            let pie = d3.pie();
+
+            let arc = d3.arc().innerRadius(0).outerRadius(radius);
+            let arcs = g.selectAll("arc").data(pie(age_group_data)).enter().append("g").attr("class", "arc");
+            arcs.append("path").attr("fill", function(d, i){
+                return color(i);
+            }).attr("d", arc);
         });
     }
 

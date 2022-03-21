@@ -37,13 +37,21 @@ body {
     margin-left: 25%;
 }
 
-#total-positive-chart {
+/* #total-positive-chart {
     position: absolute;
     background-color: beige;
     border: 1px solid orange;
     height: 100%;
     width: 25%;
     margin-left: 0%;
+    
+} */
+
+#patient-age-pie-chart {
+    position: absolute;
+    background-color: beige;
+    border: 1px solid orange;
+    margin-left: 75%;
     
 }
 
