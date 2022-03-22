@@ -259,6 +259,11 @@ map.on('load', () => {
                 },
             }, 'nys-counties-name-layer');
 
+            // insert line chart for total cases
+            // https://www.educative.io/edpresso/how-to-create-a-line-chart-using-d3
+
+
+            // need to add interaction when an area is clicked on
             map.on('click', 'nys-counties-fill-layer', e => {
                 
                 
