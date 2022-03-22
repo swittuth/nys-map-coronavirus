@@ -1,3 +1,3 @@
-const variable = ""
+const date = new Date("12-09-2020")
 
-console.log(variable === 0);
+console.log(date);

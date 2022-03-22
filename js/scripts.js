@@ -153,6 +153,9 @@ map.on('load', () => {
     
             let current_county = '';
             let last_county = data[0]['County'];
+
+            // array to store points to plot line chart
+            let data_line_chart = []
     
             /*
             render by month and day by checking for month and day 
@@ -171,6 +174,8 @@ map.on('load', () => {
                 let year = parseInt(string_date[2]);
                 let total_county_positive = 0;
                 
+                // add data points into the array that holds for line chart to plot
+
                 if (month === chosen_month && day === chosen_day && year === chosen_year){
                     current_county = data[i]['County'];
                     
@@ -241,6 +246,11 @@ map.on('load', () => {
 
             }
             matchExpression.push('#000000');
+
+            // insert line chart for total cases
+            // https://www.educative.io/edpresso/how-to-create-a-line-chart-using-d3
+
+
     
             map.addLayer({
                 'id': 'nys-counties-fill-layer',
@@ -259,8 +269,7 @@ map.on('load', () => {
                 },
             }, 'nys-counties-name-layer');
 
-            // insert line chart for total cases
-            // https://www.educative.io/edpresso/how-to-create-a-line-chart-using-d3
+            
 
 
             // need to add interaction when an area is clicked on
