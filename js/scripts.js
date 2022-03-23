@@ -12,6 +12,9 @@ const total_icu_cases = document.getElementById('total-icu-patients');
 const group_age = document.getElementById('group-age');
 const vaccinated = document.getElementById('vaccination-record');
 
+const svg_age_group = d3.select("#patient-age-pie-chart");
+const svg_total_positive_cases = d3.select("#total-positive-chart");
+
 mapboxgl.accessToken = 'pk.eyJ1Ijoic3dpdHR1dGgiLCJhIjoiY2t6aGZzcjZ1MDNucjJ1bnlpbGVjMHozNSJ9.wP4jf_xQ5-IDXtzRc2ECpA';
 const map = new mapboxgl.Map({
     container: 'map',
@@ -154,15 +157,7 @@ map.on('load', () => {
             let current_county = '';
             let last_county = data[0]['County'];
 
-            // array to store points to plot line chart
-            let data_line_chart = []
-    
-            /*
-            render by month and day by checking for month and day 
-            find the total range in python
-            */
-
-            // reset value
+            // reset value everytime a data changes 
             if (slider_event){
                 total_number_cases = 0;
             }
@@ -179,10 +174,7 @@ map.on('load', () => {
                 if (month === chosen_month && day === chosen_day && year === chosen_year){
                     current_county = data[i]['County'];
                     
-                    if (i > 0){
-                        last_county = data[i - 1]['County'];
-                    }
-                    if (current_county !== last_county){
+                    if (current_county !== last_county){ // detect for total cumulative cases for another county to register 
                         county_year_positive_cases[last_county] = total_county_positive;
                         total_county_positive = 0;
                     }
@@ -201,7 +193,6 @@ map.on('load', () => {
                         total_number_cases += total_county_positive;
                         total_positive_cases.innerHTML = 'Cumulative Positive Cases: ' + total_number_cases.toLocaleString();
                     }
-
                 }
                 else {
                     continue;
@@ -249,7 +240,75 @@ map.on('load', () => {
 
             // insert line chart for total cases
             // https://www.educative.io/edpresso/how-to-create-a-line-chart-using-d3
+            const margin = {top: 10, right: 30, bottom: 30, left: 60};
+            const width = 460 - margin.left - margin.right;
+            const height = 400 - margin.top - margin.bottom;
 
+            // append the svg object to the body of the page
+            svg_total_positive_cases
+            .append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+                .attr("transform", `translate(${margin.left},${margin.top})`);
+
+            //Read the data
+            d3.csv("https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/3_TwoNumOrdered_comma.csv",
+
+            // When reading the csv, I must format variables:
+            function(d){
+                return { date : d3.timeParse("%Y-%m-%d")(d.date), value : d.value }
+            }).then(
+
+                // Now I can use this dataset:
+                function(data) {
+
+                    // Add X axis --> it is a date format
+                    const x = d3.scaleTime()
+                    .domain(d3.extent(data, function(d) { return d.date; }))
+                    .range([ 0, width ]);
+                    svg.append("g")
+                    .attr("transform", `translate(0, ${height})`)
+                    .call(d3.axisBottom(x));
+
+                    // Max value observed:
+                    const max = d3.max(data, function(d) { return +d.value; })
+
+                    // Add Y axis
+                    const y = d3.scaleLinear()
+                    .domain([0, max])
+                    .range([ height, 0 ]);
+                    svg.append("g")
+                    .call(d3.axisLeft(y));
+
+                    // Set the gradient
+                    svg.append("linearGradient")
+                    .attr("id", "line-gradient")
+                    .attr("gradientUnits", "userSpaceOnUse")
+                    .attr("x1", 0)
+                    .attr("y1", y(0))
+                    .attr("x2", 0)
+                    .attr("y2", y(max))
+                    .selectAll("stop")
+                        .data([
+                        {offset: "0%", color: "blue"},
+                        {offset: "100%", color: "red"}
+                        ])
+                    .enter().append("stop")
+                        .attr("offset", function(d) { return d.offset; })
+                        .attr("stop-color", function(d) { return d.color; });
+
+                    // Add the line
+                    svg.append("path")
+                    .datum(data)
+                    .attr("fill", "none")
+                    .attr("stroke", "url(#line-gradient)" )
+                    .attr("stroke-width", 2)
+                    .attr("d", d3.line()
+                        .x(function(d) { return x(d.date) })
+                        .y(function(d) { return y(d.value) })
+                    )
+                });
 
     
             map.addLayer({
@@ -379,7 +438,6 @@ map.on('load', () => {
 
             // preparing data for the pie-chart
             const age_group_data = [patient_1_4, patient_5_19, patient_20_44, patient_45_54, patient_55_64, patient_65_74, patient_over_85];
-            let svg_age_group = d3.select("#patient-age-pie-chart");
 
             // creating the pie-chart
             let width = (parseFloat(svg_age_group.attr("width")) / 100)  * div_data_area.clientWidth; 
