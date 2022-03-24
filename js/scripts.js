@@ -20,9 +20,9 @@ const map = new mapboxgl.Map({
     container: 'map',
     // https://docs.mapbox.com/api/maps/styles/ - for other styles
     style: 'mapbox://styles/mapbox/dark-v10',
-    center: [-75.921021,42.138968],
-    // maxBounds: [[-81.287842,40.195659],
-    //     [-67.829590,45.158801]],
+    center: [-76.036377,42.839724],
+    maxBounds: [[-82.749023,39.597223],
+        [-69.323730,45.920587]],
     zoom: 5.9
 });
 map.scrollZoom.disable();
@@ -177,7 +177,7 @@ map.on('load', () => {
                     if (current_county !== last_county){ // detect for total cumulative cases for another county to register 
                         county_year_positive_cases[last_county] = total_county_positive;
                         total_county_positive = 0;
-                    }
+                    };
                     total_county_positive += data[i]["Cumulative Number of Positives"];
                     if (wheel_event){
                         if (increase){
@@ -192,7 +192,22 @@ map.on('load', () => {
                     else if (slider_event){
                         total_number_cases += total_county_positive;
                         total_positive_cases.innerHTML = 'Cumulative Positive Cases: ' + total_number_cases.toLocaleString();
-                    }
+                    };
+
+                    // insert line chart for total cases
+                    // https://www.educative.io/edpresso/how-to-create-a-line-chart-using-d3
+                    const margin = {top: 10, right: 30, bottom: 30, left: 60};
+                    const width = 460 - margin.left - margin.right;
+                    const height = 400 - margin.top - margin.bottom;
+
+                    // append the svg object to the body of the page
+                    svg_total_positive_cases
+                    .append("svg")
+                        .attr("width", width + margin.left + margin.right)
+                        .attr("height", height + margin.top + margin.bottom)
+                    .append("g")
+                        .attr("transform", `translate(${margin.left},${margin.top})`);
+
                 }
                 else {
                     continue;
@@ -237,79 +252,6 @@ map.on('load', () => {
 
             }
             matchExpression.push('#000000');
-
-            // insert line chart for total cases
-            // https://www.educative.io/edpresso/how-to-create-a-line-chart-using-d3
-            const margin = {top: 10, right: 30, bottom: 30, left: 60};
-            const width = 460 - margin.left - margin.right;
-            const height = 400 - margin.top - margin.bottom;
-
-            // append the svg object to the body of the page
-            svg_total_positive_cases
-            .append("svg")
-                .attr("width", width + margin.left + margin.right)
-                .attr("height", height + margin.top + margin.bottom)
-            .append("g")
-                .attr("transform", `translate(${margin.left},${margin.top})`);
-
-            //Read the data
-            d3.csv("https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/3_TwoNumOrdered_comma.csv",
-
-            // When reading the csv, I must format variables:
-            function(d){
-                return { date : d3.timeParse("%Y-%m-%d")(d.date), value : d.value }
-            }).then(
-
-                // Now I can use this dataset:
-                function(data) {
-
-                    // Add X axis --> it is a date format
-                    const x = d3.scaleTime()
-                    .domain(d3.extent(data, function(d) { return d.date; }))
-                    .range([ 0, width ]);
-                    svg.append("g")
-                    .attr("transform", `translate(0, ${height})`)
-                    .call(d3.axisBottom(x));
-
-                    // Max value observed:
-                    const max = d3.max(data, function(d) { return +d.value; })
-
-                    // Add Y axis
-                    const y = d3.scaleLinear()
-                    .domain([0, max])
-                    .range([ height, 0 ]);
-                    svg.append("g")
-                    .call(d3.axisLeft(y));
-
-                    // Set the gradient
-                    svg.append("linearGradient")
-                    .attr("id", "line-gradient")
-                    .attr("gradientUnits", "userSpaceOnUse")
-                    .attr("x1", 0)
-                    .attr("y1", y(0))
-                    .attr("x2", 0)
-                    .attr("y2", y(max))
-                    .selectAll("stop")
-                        .data([
-                        {offset: "0%", color: "blue"},
-                        {offset: "100%", color: "red"}
-                        ])
-                    .enter().append("stop")
-                        .attr("offset", function(d) { return d.offset; })
-                        .attr("stop-color", function(d) { return d.color; });
-
-                    // Add the line
-                    svg.append("path")
-                    .datum(data)
-                    .attr("fill", "none")
-                    .attr("stroke", "url(#line-gradient)" )
-                    .attr("stroke-width", 2)
-                    .attr("d", d3.line()
-                        .x(function(d) { return x(d.date) })
-                        .y(function(d) { return y(d.value) })
-                    )
-                });
-
     
             map.addLayer({
                 'id': 'nys-counties-fill-layer',

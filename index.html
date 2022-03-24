@@ -13,8 +13,27 @@
     </head>
 
     <body>
+
+        <div id="main-display">
+
+            <div id = "data-area">
+                <svg id="total-positive-chart" width = 25% height = 99%></svg>
+                <svg id="total-fatality-chart"></svg>
+                <svg id="total-hospitalization-chart"></svg>
+                <svg id="total-icu-patient-chart"></svg>
+                <svg id="patient-age-pie-chart" width = 25% height = 99%></svg>
+                <svg id="vaccination-percentage-chart"></svg>
+            </div>
+
+            <div id='map'></div>
+
+            <div id="controller">
+                <input id = 'slider' class = 'row' 
+                    type = 'range' min = '1' max = '713' step = '1' value = '1'>
+            </div>
+
+        </div>
         
-        <div id='map'></div>
         <div id = 'info-area'>
             <h1 id='title'>Covid in NYS</h1>
 
@@ -41,25 +60,8 @@
                     First Dose Received: <br>
                     Full Dose Received: 
                 </p>
-
-                <div id="controller">
-                    <input id = 'slider' class = 'row' 
-                        type = 'range' min = '1' max = '713' step = '1' value = '1'>
-                </div>
-                
-
                 
             </div>
-        </div>
-
-        <div id = "data-area">
-            <svg id="total-positive-chart" width = 25% height = 99%></svg>
-            <svg id="total-fatality-chart"></svg>
-            <svg id="total-hospitalization-chart"></svg>
-            <svg id="total-icu-patient-chart"></svg>
-            <svg id="patient-age-pie-chart" width = 25% height = 99%></svg>
-            <svg id="vaccination-percentage-chart"></svg>
-
         </div>
         
         <script src = "./js/scripts.js"></script>
