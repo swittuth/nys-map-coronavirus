@@ -12,9 +12,6 @@ const total_icu_cases = document.getElementById('total-icu-patients');
 const group_age = document.getElementById('group-age');
 const vaccinated = document.getElementById('vaccination-record');
 
-const svg_age_group = d3.select("#patient-age-pie-chart");
-const svg_total_positive_cases = d3.select("#total-positive-chart");
-
 mapboxgl.accessToken = 'pk.eyJ1Ijoic3dpdHR1dGgiLCJhIjoiY2t6aGZzcjZ1MDNucjJ1bnlpbGVjMHozNSJ9.wP4jf_xQ5-IDXtzRc2ECpA';
 const map = new mapboxgl.Map({
     container: 'map',
@@ -157,7 +154,15 @@ map.on('load', () => {
             let current_county = '';
             let last_county = data[0]['County'];
 
-            // reset value everytime a data changes 
+            // array to store points to plot line chart
+            let data_line_chart = []
+    
+            /*
+            render by month and day by checking for month and day 
+            find the total range in python
+            */
+
+            // reset value
             if (slider_event){
                 total_number_cases = 0;
             }
@@ -174,7 +179,10 @@ map.on('load', () => {
                 if (month === chosen_month && day === chosen_day && year === chosen_year){
                     current_county = data[i]['County'];
                     
-                    if (current_county !== last_county){ // detect for total cumulative cases for another county to register 
+                    if (i > 0){
+                        last_county = data[i - 1]['County'];
+                    }
+                    if (current_county !== last_county){
                         county_year_positive_cases[last_county] = total_county_positive;
                         total_county_positive = 0;
                     };
@@ -192,6 +200,7 @@ map.on('load', () => {
                     else if (slider_event){
                         total_number_cases += total_county_positive;
                         total_positive_cases.innerHTML = 'Cumulative Positive Cases: ' + total_number_cases.toLocaleString();
+<<<<<<< HEAD
                     };
 
                     // insert line chart for total cases
@@ -207,6 +216,9 @@ map.on('load', () => {
                         .attr("height", height + margin.top + margin.bottom)
                     .append("g")
                         .attr("transform", `translate(${margin.left},${margin.top})`);
+=======
+                    }
+>>>>>>> parent of 5a6da19 (remove unnecessary code)
 
                 }
                 else {
@@ -252,6 +264,14 @@ map.on('load', () => {
 
             }
             matchExpression.push('#000000');
+<<<<<<< HEAD
+=======
+
+            // insert line chart for total cases
+            // https://www.educative.io/edpresso/how-to-create-a-line-chart-using-d3
+
+
+>>>>>>> parent of 5a6da19 (remove unnecessary code)
     
             map.addLayer({
                 'id': 'nys-counties-fill-layer',
@@ -380,6 +400,7 @@ map.on('load', () => {
 
             // preparing data for the pie-chart
             const age_group_data = [patient_1_4, patient_5_19, patient_20_44, patient_45_54, patient_55_64, patient_65_74, patient_over_85];
+            let svg_age_group = d3.select("#patient-age-pie-chart");
 
             // creating the pie-chart
             let width = (parseFloat(svg_age_group.attr("width")) / 100)  * div_data_area.clientWidth; 
