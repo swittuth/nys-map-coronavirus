@@ -291,14 +291,50 @@ map.on('load', () => {
     function generate_positive_chart(date_array, cases_array) {
         // range is the output range to output the map
 
-        let svg = d3.select("#total-positive-chart").append("svg").attr("width", 200).attr("height", 200).attr("padding", 20);
+        // let svg = d3.select("#total-positive-chart").append("svg").attr("width", 200).attr("height", 200).attr("padding", 20);
 
-        //let width = (parseFloat(svg_total_positive_cases.attr("width")) / 100)  * div_data_area.clientWidth; 
-        let scale = d3.scaleLinear().domain([d3.min(date_array), d3.max(date_array)]).range([0, 200]);
-        let x_axis = d3.axisBottom().scale(scale);
+        // //let width = (parseFloat(svg_total_positive_cases.attr("width")) / 100)  * div_data_area.clientWidth; 
+        // let scale = d3.scaleTime().domain(d3.extent(date_virus, function(d){
+        //     return new Date(d)
+        // })).range([0, 200]);
+        // let x_axis = d3.axisBottom().tickFormat(d3.timeFormat("%Y-%m-%d")).tickValues(date_virus.map(function(d){
+        //     return new Date(d);
+        // }));
 
-        svg.append("g").call(x_axis);
-    }
+        // svg.append("g").call(x_axis);
+
+        let margin = {top: 30, right: 20, bottom: 30, left: 50},
+        width = 600 - margin.left - margin.right,
+        height = 270 - margin.top - margin.bottom;
+
+        let parseDate = d3.time.format("%d-%b-%y").parse;
+
+        // Set the ranges
+        var x = d3.time.scale().range([0, width]);
+        var y = d3.scale.linear().range([height, 0]);
+
+        // Define the axes
+        var xAxis = d3.svg.axis().scale(x)
+            .orient("bottom").ticks(5);
+
+        var yAxis = d3.svg.axis().scale(y)
+            .orient("left").ticks(5);
+
+        // Define the line
+        var valueline = d3.svg.line()
+            .x(function(d) { return x(d.date); })
+            .y(function(d) { return y(d.close); });
+            }
+
+        // Adds the svg canvas
+        var svg = d3.select("#total-positive-chart")
+        .append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+            .attr("transform", 
+                "translate(" + margin.left + "," + margin.top + ")");
+        // https://bl.ocks.org/d3noob/7030f35b72de721622b8
 
     //render map for TOTAL FATALITY CASES
     let county_fatal_cases = {} // NEED TO UPATE AND INCLUDE DATA INTO OBJECT OF COUNTIES AND FATAL CASES
