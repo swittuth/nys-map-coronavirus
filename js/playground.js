@@ -1,3 +1,2 @@
-const date = new Date("12-09-2020")
-
-console.log(date);
+let c = d3.max([2, 3]);
+console.log(c);

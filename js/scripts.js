@@ -13,17 +13,15 @@ const group_age = document.getElementById('group-age');
 const vaccinated = document.getElementById('vaccination-record');
 
 const svg_age_group = d3.select("#patient-age-pie-chart");
-const svg_total_positive_cases = d3.select("#total-positive-chart");
 
 mapboxgl.accessToken = 'pk.eyJ1Ijoic3dpdHR1dGgiLCJhIjoiY2t6aGZzcjZ1MDNucjJ1bnlpbGVjMHozNSJ9.wP4jf_xQ5-IDXtzRc2ECpA';
 const map = new mapboxgl.Map({
     container: 'map',
     // https://docs.mapbox.com/api/maps/styles/ - for other styles
     style: 'mapbox://styles/mapbox/dark-v10',
-    center: [-76.036377,42.839724],
-    maxBounds: [[-82.749023,39.597223],
-        [-69.323730,45.920587]],
-    zoom: 5.9
+    center: [-75.796266,43.425341],
+    maxBounds: [[-82.712159,40.170840],[-68.880372,46.513840]],
+    zoom: 5.7
 });
 map.scrollZoom.disable();
 
@@ -64,6 +62,11 @@ const tints_array = ['#faf3ed', '#faf1eb', '#f9efe8', '#f8eee6', '#f8ece3', '#f7
                     '#180b01', '#170a00', '#150900']
 
 
+// render map for TOTAL POSITIVE CASES
+let county_year_positive_cases = {}
+const date_virus = [];
+const total_virus_on_date = [];
+
 map.on('load', () => {
     map.addSource('nys-counties', {
         type: "geojson",
@@ -88,6 +91,7 @@ map.on('load', () => {
         let start_date = new Date("03/01/2020");
 
         if (event.wheelDelta < 0){
+            // scroll up the date
             if (slider.value <= 711){
                 slider.value = (parseInt(slider.value) + 1).toString();
                 start_date.setDate(start_date.getDate() + parseInt(slider.value)); // added days to date to render map correctly
@@ -101,17 +105,23 @@ map.on('load', () => {
             }
         }
         else {
+            // scroll down
             if (slider.value >= 0){
                 slider.value -= 1;
                 start_date.setDate(start_date.getDate() + parseInt(slider.value)); // added days to date to render map correctly
                 let current_month = start_date.getMonth() + 1;
                 let current_day = start_date.getDate();
                 let current_year = start_date.getFullYear();
-                date.innerHTML = `Date: ${start_date.toLocaleString('default', {month: 'long'})} ${current_day - 1}, ${current_year}`;
+                date.innerHTML = `Date: ${start_date.toLocaleString('default', {month: 'long'})} ${current_day}, ${current_year}`;
 
                 map.removeLayer('nys-counties-fill-layer');
                 render_positive_map(current_day, current_month, current_year);
                 increase = false;
+
+                if (date_virus.length > 0){
+                        date_virus.pop();
+                        total_virus_on_date.pop();
+                }
             }
         }
     }, {passive:false});
@@ -146,9 +156,7 @@ map.on('load', () => {
         }
 
     });
-    
-    // render map for TOTAL POSITIVE CASES
-    let county_year_positive_cases = {}
+
     // render map on that particular day, month and year 
     function render_positive_map(chosen_day, chosen_month, chosen_year) {
         covid_positive_data_promise.then(data => { // array of of objects with time 
@@ -163,15 +171,19 @@ map.on('load', () => {
             }
 
             for (let i = 0; i < data.length; i++){
-                let string_date = data[i]["Test Date"].split(' ')[0].split('/');
+                let current_date = data[i]["Test Date"].split(' ')[0]; // get date to display in line chart
+                let string_date = current_date.split('/');
                 let month = parseInt(string_date[0]);
                 let day = parseInt(string_date[1]);
                 let year = parseInt(string_date[2]);
                 let total_county_positive = 0;
                 
-                // add data points into the array that holds for line chart to plot
 
                 if (month === chosen_month && day === chosen_day && year === chosen_year){
+                    if (!date_virus.includes(current_date)){
+                        date_virus.push(current_date);
+                    }
+
                     current_county = data[i]['County'];
                     
                     if (current_county !== last_county){ // detect for total cumulative cases for another county to register 
@@ -194,26 +206,18 @@ map.on('load', () => {
                         total_positive_cases.innerHTML = 'Cumulative Positive Cases: ' + total_number_cases.toLocaleString();
                     };
 
-                    // insert line chart for total cases
-                    // https://www.educative.io/edpresso/how-to-create-a-line-chart-using-d3
-                    const margin = {top: 10, right: 30, bottom: 30, left: 60};
-                    const width = 460 - margin.left - margin.right;
-                    const height = 400 - margin.top - margin.bottom;
-
-                    // append the svg object to the body of the page
-                    svg_total_positive_cases
-                    .append("svg")
-                        .attr("width", width + margin.left + margin.right)
-                        .attr("height", height + margin.top + margin.bottom)
-                    .append("g")
-                        .attr("transform", `translate(${margin.left},${margin.top})`);
-
                 }
                 else {
                     continue;
                 }
                 county_year_positive_cases[current_county] = total_county_positive; // to account for the last county: Yates
             }
+            // to avoid adding points when the dates don't exist 
+            if (total_virus_on_date.length < date_virus.length){
+                total_virus_on_date.push(total_number_cases);
+            }
+
+            generate_positive_chart(date_virus, total_virus_on_date);
 
             extract_fatal_data(chosen_day, chosen_month, chosen_year);
             extract_hospitalization_data(chosen_month, chosen_day, chosen_year);
@@ -270,9 +274,6 @@ map.on('load', () => {
                 },
             }, 'nys-counties-name-layer');
 
-            
-
-
             // need to add interaction when an area is clicked on
             map.on('click', 'nys-counties-fill-layer', e => {
                 
@@ -285,6 +286,19 @@ map.on('load', () => {
         });
     }
     // end rendering for TOTAL POSITIVE CASES
+
+
+    function generate_positive_chart(date_array, cases_array) {
+        // range is the output range to output the map
+
+        let svg = d3.select("#total-positive-chart").append("svg").attr("width", 200).attr("height", 200).attr("padding", 20);
+
+        //let width = (parseFloat(svg_total_positive_cases.attr("width")) / 100)  * div_data_area.clientWidth; 
+        let scale = d3.scaleLinear().domain([d3.min(date_array), d3.max(date_array)]).range([0, 200]);
+        let x_axis = d3.axisBottom().scale(scale);
+
+        svg.append("g").call(x_axis);
+    }
 
     //render map for TOTAL FATALITY CASES
     let county_fatal_cases = {} // NEED TO UPATE AND INCLUDE DATA INTO OBJECT OF COUNTIES AND FATAL CASES
@@ -382,6 +396,7 @@ map.on('load', () => {
             const age_group_data = [patient_1_4, patient_5_19, patient_20_44, patient_45_54, patient_55_64, patient_65_74, patient_over_85];
 
             // creating the pie-chart
+            // finds the width height because width height is based on percentage: convert to decimal first then multiply by the width of the div box
             let width = (parseFloat(svg_age_group.attr("width")) / 100)  * div_data_area.clientWidth; 
             let height = (parseFloat(svg_age_group.attr("height")) / 100) * div_data_area.clientHeight;
             let radius = Math.min(width, height) / 2;
@@ -389,7 +404,7 @@ map.on('load', () => {
             let color = d3.scaleOrdinal(['#5C4B51','#8CBEB2','#F2EBBF','#F3B562','#F06060', '#F26601', '#66CBDF', '#886F61']);
             let pie = d3.pie();
 
-            let arc = d3.arc().innerRadius(0).outerRadius(radius);
+            let arc = d3.arc().innerRadius(0).outerRadius(radius); 
             let arcs = g.selectAll("arc").data(pie(age_group_data)).enter().append("g").attr("class", "arc");
             arcs.append("path").attr("fill", function(d, i){
                 return color(i);
@@ -561,4 +576,3 @@ map.on('load', () => {
 // DOUBLE CHECK DATA AGAIN BECAUSE HOSPITALIZATION AND FATALITY CASES ALREADY BEGIN ON MARCH 2ND AND 3RD OF 2020 
 
 // AFTER ADDING VACINATION DATA SHOULD WORK ON INCOPORATING D3.js into the map to display data
-// stopped after svg scale - tutorial for d3
