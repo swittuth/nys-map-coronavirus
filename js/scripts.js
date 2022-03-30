@@ -289,52 +289,48 @@ map.on('load', () => {
 
 
     function generate_positive_chart(date_array, cases_array) {
-        // range is the output range to output the map
+        const data_array = [];
 
-        // let svg = d3.select("#total-positive-chart").append("svg").attr("width", 200).attr("height", 200).attr("padding", 20);
+        for (let i = 0; i < date_array.length; i++){
+            let new_data = {}
+            new_data.rel_date = date_array[i];
+            new_data.rel_case = cases_array[i];
 
-        // //let width = (parseFloat(svg_total_positive_cases.attr("width")) / 100)  * div_data_area.clientWidth; 
-        // let scale = d3.scaleTime().domain(d3.extent(date_virus, function(d){
-        //     return new Date(d)
-        // })).range([0, 200]);
-        // let x_axis = d3.axisBottom().tickFormat(d3.timeFormat("%Y-%m-%d")).tickValues(date_virus.map(function(d){
-        //     return new Date(d);
-        // }));
+            data_array.push(new_data)
+        }
 
-        // svg.append("g").call(x_axis);
+        // created date parser for x-axis
+        const yAccessor = d => d.rel_case;
+        const dateParser = d3.timeParse("%m/%d/%Y");
+        const xAccessor = (d) => dateParser(d.rel_date);
 
-        let margin = {top: 30, right: 20, bottom: 30, left: 50},
-        width = 600 - margin.left - margin.right,
-        height = 270 - margin.top - margin.bottom;
-
-        let parseDate = d3.time.format("%d-%b-%y").parse;
-
-        // Set the ranges
-        var x = d3.time.scale().range([0, width]);
-        var y = d3.scale.linear().range([height, 0]);
-
-        // Define the axes
-        var xAxis = d3.svg.axis().scale(x)
-            .orient("bottom").ticks(5);
-
-        var yAxis = d3.svg.axis().scale(y)
-            .orient("left").ticks(5);
-
-        // Define the line
-        var valueline = d3.svg.line()
-            .x(function(d) { return x(d.date); })
-            .y(function(d) { return y(d.close); });
+        const wrapper = d3.select("#total-positive-chart");
+        
+        let dimensions = {
+            height:  (parseFloat(d3.select("#total-positive-chart").attr('height').replace("%","")) / 100) * div_data_area.clientHeight,
+            width: (parseFloat(d3.select("#total-positive-chart").attr('width').replace("%","")) / 100) * div_data_area.clientWidth,
+            margin: {
+                top: 5,
+                right: 5,
+                bottom: 5,
+                left: 5
             }
+        };
+        dimensions.bounded_width = dimensions.width - dimensions.margin.left - dimensions.margin.right;
+        dimensions.bounded_height = dimensions.height - dimensions.margin.top - dimensions.margin.bottom;
+        wrapper.selectAll('g').remove();
+        const bounds = wrapper.append('g').style("transform", `translate(${dimensions.margin.left}px, ${dimensions.margin.top}px)`);
+    
+        const yScale = d3.scaleLinear().domain(d3.extent(data_array, yAccessor)).range([dimensions.bounded_height, 0]);
+        const xScale = d3.scaleTime().domain(d3.extent(data_array, xAccessor)).range([0, dimensions.bounded_width]);
+        
+        const lineGenerator = d3.line().x((d) => xScale(xAccessor(d))).y((d)=> yScale(yAccessor(d))).curve(d3.curveBasis);
 
-        // Adds the svg canvas
-        var svg = d3.select("#total-positive-chart")
-        .append("svg")
-            .attr("width", width + margin.left + margin.right)
-            .attr("height", height + margin.top + margin.bottom)
-        .append("g")
-            .attr("transform", 
-                "translate(" + margin.left + "," + margin.top + ")");
-        // https://bl.ocks.org/d3noob/7030f35b72de721622b8
+        const line = bounds.append("path").attr("d", lineGenerator(data_array))
+        .attr("fill", "none").attr("stroke", "red").attr("stroke-width", 2);
+        
+    }
+
 
     //render map for TOTAL FATALITY CASES
     let county_fatal_cases = {} // NEED TO UPATE AND INCLUDE DATA INTO OBJECT OF COUNTIES AND FATAL CASES
@@ -365,12 +361,11 @@ map.on('load', () => {
                         if (data[i]['County'] !== 'Statewide Total'){
                             current_total_fatal_cases += data[i]['Place of Fatality'];
                         }
-
                     }
                 }
             }
 
-            
+            // generate_fatality_chart(date_virus, total_virus_on_date)
 
             total_fatal_cases.innerHTML = `Total Fatality: ${current_total_fatal_cases.toLocaleString()}`;
         });
@@ -436,6 +431,7 @@ map.on('load', () => {
             let width = (parseFloat(svg_age_group.attr("width")) / 100)  * div_data_area.clientWidth; 
             let height = (parseFloat(svg_age_group.attr("height")) / 100) * div_data_area.clientHeight;
             let radius = Math.min(width, height) / 2;
+            svg_age_group.selectAll('g').remove();
             let g = svg_age_group.append("g").attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
             let color = d3.scaleOrdinal(['#5C4B51','#8CBEB2','#F2EBBF','#F3B562','#F06060', '#F26601', '#66CBDF', '#886F61']);
             let pie = d3.pie();
