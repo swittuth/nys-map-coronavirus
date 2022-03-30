@@ -58,6 +58,14 @@ body {
     text-align: center;
 }
 
+#vaccination-stacked-chart {
+    position: absolute;
+    border: 1px solid orange;
+    background-color: beige;
+    margin-left: 60%;
+    text-align: center;
+}
+
 #patient-age-pie-chart {
     position: absolute;
     background-color: beige;
