@@ -562,7 +562,7 @@ map.on('load', () => {
                 second_dose_on_date.push(full_dose);
             }
 
-            generate_stack_chart_vaccination(date_vaccination, first_dose_on_date, second_dose_on_date, '#vaccination-stacked-chart');
+            //generate_stack_chart_vaccination(date_vaccination, first_dose_on_date, second_dose_on_date, '#vaccination-stacked-chart');
 
             vaccinated.innerHTML = `First Dose Received: ${first_dose.toLocaleString()} <br>
                     Full Dose Received: ${full_dose.toLocaleString()}`;
@@ -570,112 +570,114 @@ map.on('load', () => {
         });
     }
 
-    function generate_stack_chart_vaccination(date_array, data_array1, data_array2, elementID){
-        const data_array = [];
-        // data preparation
-        for (let i = 0; i < date_array.length; i++){
-            const new_data = {};
-            new_data.rel_date = date_array[i];
-            new_data.first_dose = data_array1[i];
-            new_data.second_dose = data_array2[i];
+    // FIX TO WORK WITH STACK CHART
+    // function generate_stack_chart_vaccination(date_array, data_array1, data_array2, elementID){
+    //     const data_array = [];
+    //     // data preparation
+    //     for (let i = 0; i < date_array.length; i++){
+    //         const new_data = {};
+    //         new_data.rel_date = date_array[i];
+    //         new_data.first_dose = data_array1[i];
+    //         new_data.second_dose = data_array2[i];
 
-            data_array.push(new_data);
-        }
+    //         data_array.push(new_data);
+    //     }
 
-        const stack = d3.stack().keys(['first_dose', 'second_dose']);
-        const stackedValues = stack(data_array);
+    //     const stack = d3.stack().keys(['first_dose', 'second_dose']);
+    //     const stackedValues = stack(data_array);
 
 
-        let stackedData = [];
-        stackedValues.forEach(layer => {
-            const currentStack = [];
-            layer.forEach((d, i) => {
-                currentStack.push({
-                    values: d,
-                    year: data_array[i].rel_date
-                })
-            });
+    //     let stackedData = [];
+    //     stackedValues.forEach(layer => {
+    //         const currentStack = [];
+    //         layer.forEach((d, i) => {
+    //             currentStack.push({
+    //                 values: d,
+    //                 year: data_array[i].rel_date
+    //             })
+    //         });
 
-            stackedData = stackedData.concat(currentStack);
-        });
+    //         stackedData = stackedData.concat(currentStack);
+    //     });
 
-        //console.log(stackedData);
+    //     //console.log(stackedData);
         
-        const color = ['lightgreen', 'lightblue'];
-        const wrapper = d3.select(elementID);
-        const stroke_width = 2;
+    //     const color = ['lightgreen', 'lightblue'];
+    //     const wrapper = d3.select(elementID);
+    //     const stroke_width = 2;
         
-        let dimensions = {
-            height:  (parseFloat(d3.select(elementID).attr('height').replace("%","")) / 100) * div_data_area.clientHeight,
-            width: (parseFloat(d3.select(elementID).attr('width').replace("%","")) / 100) * div_data_area.clientWidth,
-            margin: {
-                top: 5,
-                right: 5,
-                bottom: 5,
-                left: 5
-            }
-        };
-        dimensions.bounded_width = dimensions.width - dimensions.margin.left - dimensions.margin.right;
-        dimensions.bounded_height = dimensions.height - dimensions.margin.top - dimensions.margin.bottom;
+    //     let dimensions = {
+    //         height:  (parseFloat(d3.select(elementID).attr('height').replace("%","")) / 100) * div_data_area.clientHeight,
+    //         width: (parseFloat(d3.select(elementID).attr('width').replace("%","")) / 100) * div_data_area.clientWidth,
+    //         margin: {
+    //             top: 5,
+    //             right: 5,
+    //             bottom: 5,
+    //             left: 5
+    //         }
+    //     };
+    //     dimensions.bounded_width = dimensions.width - dimensions.margin.left - dimensions.margin.right;
+    //     dimensions.bounded_height = dimensions.height - dimensions.margin.top - dimensions.margin.bottom;
 
-        // displaying stacked chart data 
-        wrapper.selectAll('g').remove();
-        const chart = wrapper.append('g').attr("transform", `translate(${dimensions.margin.left}, 0)`);
-        const grp = chart
-        .append("g")
-        .attr("transform", `translate(-${dimensions.margin.left - stroke_width},-${dimensions.margin.top})`);
+    //     // displaying stacked chart data 
+    //     wrapper.selectAll('g').remove();
+    //     const chart = wrapper.append('g').attr("transform", `translate(${dimensions.margin.left}, 0)`);
+    //     const grp = chart
+    //     .append("g")
+    //     .attr("transform", `translate(-${dimensions.margin.left - stroke_width},-${dimensions.margin.top})`);
 
         
-        const dateParser = d3.timeParse("%m/%d/%Y");
-        const xAccessor = (d) => dateParser(d.rel_date);
+    //     const dateParser = d3.timeParse("%m/%d/%Y");
+    //     const xAccessor = (d) => dateParser(d.rel_date);
 
-        // Create scales
-        const yScale = d3
-        .scaleLinear()
-        .domain([0, d3.max(stackedValues[stackedValues.length - 1], dp => dp[1])])
-        .range([dimensions.bounded_height, 0]);
+    //     // Create scales
+    //     const yScale = d3
+    //     .scaleLinear()
+    //     .domain([0, d3.max(stackedValues[stackedValues.length - 1], dp => dp[1])])
+    //     .range([dimensions.bounded_height, 0]);
 
-        const xScale = d3
-        .scaleTime()
-        .domain(d3.extent(data_array, xAccessor))
-        .range([0, dimensions.bounded_width]);
+    //     const xScale = d3
+    //     .scaleTime()
+    //     .domain(d3.extent(data_array, xAccessor))
+    //     .range([0, dimensions.bounded_width]);
 
-        // defining the function to create area of stacked chart
-        const area = d3
-        .area()
-        .x(dataPoint => xScale(dataPoint.year))
-        .y0(dataPoint => yScale(dataPoint.values[0]))
-        .y1(dataPoint => yScale(dataPoint.values[1]));
+    //     // defining the function to create area of stacked chart
+    //     const area = d3
+    //     .area()
+    //     .x(dataPoint => xScale(dataPoint.year))
+    //     .y0(dataPoint => yScale(dataPoint.values[0]))
+    //     .y1(dataPoint => yScale(dataPoint.values[1]));
 
-        const series = grp
-        .selectAll(".series")
-        .data(stackedData)
-        .enter()
-        .append("g")
-        .attr("class", "series");
 
-        series
-        .append("path")
-        .attr("transform", `translate(${dimensions.margin.left},0)`)
-        .style("fill", (d, i) => color[i])
-        .attr("stroke", "steelblue")
-        .attr("stroke-linejoin", "round")
-        .attr("stroke-linecap", "round")
-        .attr("stroke-width", stroke_width)
-        .attr("d", d => area(d));
+    //     const series = grp
+    //     .data(stackedData)
+    //     .enter()
+    //     .append("g");
 
-        //Add the X Axis
-        chart
-        .append("g")
-        .attr("transform", `translate(0,${dimensions.bounded_height})`)
-        .call(d3.axisBottom(xScale).ticks(data_array.length));
+    //     series
+    //     .append("path")
+    //     .attr("d", d => area(d))
+    //     .attr("transform", `translate(${dimensions.margin.left},0)`)
+    //     .style("fill", (d, i) => color[i])
+    //     .attr("stroke", "steelblue")
+    //     .attr("stroke-linejoin", "round")
+    //     .attr("stroke-linecap", "round")
+    //     .attr("stroke-width", stroke_width);
 
-        // Add the Y Axis
-        chart
-        .append("g")
-        .attr("transform", `translate(0, 0)`)
-        .call(d3.axisLeft(yScale));
-    }
+        
+
+    //     //Add the X Axis
+    //     chart
+    //     .append("g")
+    //     .attr("transform", `translate(0,${dimensions.bounded_height})`)
+    //     .call(d3.axisBottom(xScale).ticks(data_array.length));
+
+    //     // Add the Y Axis
+    //     chart
+    //     .append("g")
+    //     .attr("transform", `translate(0, 0)`)
+    //     .call(d3.axisLeft(yScale));
+    // }
 
     map.addLayer({
         'id': 'nys-counties-line-layer',
