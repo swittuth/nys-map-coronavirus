@@ -62,10 +62,22 @@ const tints_array = ['#faf3ed', '#faf1eb', '#f9efe8', '#f8eee6', '#f8ece3', '#f7
                     '#180b01', '#170a00', '#150900']
 
 
-// render map for TOTAL POSITIVE CASES
+// variable to keep track of total positive cases for each county
 let county_year_positive_cases = {}
+
+
+// variables created to render line chart
 const date_virus = [];
 const total_virus_on_date = [];
+const date_fatal = [];
+const total_fatal_on_date = [];
+const date_hospitalization = [];
+const total_hospitalization_on_date = []
+
+// variables created to render stack chart
+const date_vaccination = [];
+const first_dose_on_date = [];
+const second_dose_on_date = [];
 
 map.on('load', () => {
     map.addSource('nys-counties', {
@@ -118,9 +130,25 @@ map.on('load', () => {
                 render_positive_map(current_day, current_month, current_year);
                 increase = false;
 
-                if (date_virus.length > 0){
-                        date_virus.pop();
-                        total_virus_on_date.pop();
+                if (date_virus.length >= 0){
+                    date_virus.pop();
+                    total_virus_on_date.pop();
+                }
+
+                if (date_fatal.length > 0){
+                    date_fatal.pop();
+                    total_fatal_on_date.pop();
+                }
+
+                if (date_hospitalization.length > 0){
+                    date_hospitalization.pop();
+                    total_hospitalization_on_date.pop();
+                }
+
+                if (date_vaccination.length > 0){
+                    date_vaccination.pop();
+                    first_dose_on_date.pop();
+                    second_dose_on_date.pop();
                 }
             }
         }
@@ -217,7 +245,7 @@ map.on('load', () => {
                 total_virus_on_date.push(total_number_cases);
             }
 
-            generate_positive_chart(date_virus, total_virus_on_date);
+            generate_line_chart(date_virus, total_virus_on_date, '#total-positive-chart', 'purple');
 
             extract_fatal_data(chosen_day, chosen_month, chosen_year);
             extract_hospitalization_data(chosen_month, chosen_day, chosen_year);
@@ -327,12 +355,13 @@ map.on('load', () => {
         const lineGenerator = d3.line().x((d) => xScale(xAccessor(d))).y((d)=> yScale(yAccessor(d))).curve(d3.curveBasis);
 
         const line = bounds.append("path").attr("d", lineGenerator(data_array))
-        .attr("fill", "none").attr("stroke", "red").attr("stroke-width", 2);
+        .attr("fill", "none").attr("stroke", "purple").attr("stroke-width", 2);
         
     }
 
 
     //render map for TOTAL FATALITY CASES
+    // and call on function to generate fatal chart 
     let county_fatal_cases = {} // NEED TO UPATE AND INCLUDE DATA INTO OBJECT OF COUNTIES AND FATAL CASES
     function extract_fatal_data(chosen_day, chosen_month, chosen_year){
         covid_fatality_data_promise.then(data => {
@@ -342,13 +371,17 @@ map.on('load', () => {
             
             for (let i = 0; i < data.length; i++){
                 current_county = data[i]['County'];
-                let date = data[i]['Report Date'].split('/');
+                let current_date = data[i]['Report Date'];
+                let date = current_date.split('/');
                 let month = parseInt(date[0]);
                 let day = parseInt(date[1]);
                 let year = parseInt(date[2]);
                 
                 
                 if (chosen_year === year && chosen_month === month && chosen_day === day){
+                    if (!date_fatal.includes(current_date)){
+                        date_fatal.push(current_date);
+                    }
 
                     county_fatal_cases[current_county] = data[i]['Place of Fatality'];
 
@@ -364,15 +397,16 @@ map.on('load', () => {
                     }
                 }
             }
+            if (total_fatal_on_date.length < date_fatal.length){
+                total_fatal_on_date.push(current_total_fatal_cases);
+            }
 
-            // generate_fatality_chart(date_virus, total_virus_on_date)
-
+            generate_line_chart(date_fatal, total_fatal_on_date, '#total-fatality-chart', 'red');
             total_fatal_cases.innerHTML = `Total Fatality: ${current_total_fatal_cases.toLocaleString()}`;
         });
     }
     // end of extract data for fatal-cases on map
 
-    
     // start to extract data for hospitalization rate
     const hospital_cases = {}
     function extract_hospitalization_data(chosen_month, chosen_day, chosen_year) {
@@ -389,13 +423,18 @@ map.on('load', () => {
             let patient_over_85 = 0;
 
             for (let i = 0; i < data.length; i++){
-                const date_array = data[i]['As of Date'].split('/');
+                const current_date = data[i]['As of Date'];
+                const date_array = current_date.split('/');
                 const month = parseInt(date_array[0]);
                 const day = parseInt(date_array[1]);
                 const year = parseInt(date_array[2]);
 
                 if (chosen_month === month && chosen_day === day && chosen_year === year){
-                    hospital_cases[data[i]['Facility County']] = data[i]['Patients Currently Hospitalized'];
+                    if (!date_hospitalization.includes(current_date)){
+                        date_hospitalization.push(current_date);
+                    }
+
+                    hospital_cases[data[i]['Facility County']] = data[i]['Patients Currently Hospitalized']; // total hospitalization
                     hospitalization_cases += data[i]['Patients Currently Hospitalized'];
                     icu_cases += data[i]["Patients Currently in ICU"];
                     patient_1_4 += data[i]["Patients Age Less Than 1 Year"];
@@ -410,6 +449,12 @@ map.on('load', () => {
 
                 // fix error in data since there are strings instead of number
             }
+
+            if (total_hospitalization_on_date.length < date_hospitalization.length){
+                total_hospitalization_on_date.push(hospitalization_cases);
+            }
+
+            generate_line_chart(date_hospitalization, total_hospitalization_on_date, '#total-hospitalization-chart', 'aqua');
 
             total_hospitalization_cases.innerHTML = `Total Hostpitalization: ${hospitalization_cases.toLocaleString()}`;
             total_icu_cases.innerHTML = `Total Patients in ICU: ${icu_cases.toLocaleString()}`;
@@ -444,6 +489,48 @@ map.on('load', () => {
         });
     }
 
+    function generate_line_chart(date_array, cases_array, elementID, color){
+        const data_array = [];
+
+        for (let i = 0; i < date_array.length; i++){
+            let new_data = {}
+            new_data.rel_date = date_array[i];
+            new_data.rel_case = cases_array[i];
+
+            data_array.push(new_data)
+        }
+
+        // created date parser for x-axis
+        const yAccessor = d => d.rel_case;
+        const dateParser = d3.timeParse("%m/%d/%Y");
+        const xAccessor = (d) => dateParser(d.rel_date);
+
+        const wrapper = d3.select(elementID);
+        
+        let dimensions = {
+            height:  (parseFloat(d3.select(elementID).attr('height').replace("%","")) / 100) * div_data_area.clientHeight,
+            width: (parseFloat(d3.select(elementID).attr('width').replace("%","")) / 100) * div_data_area.clientWidth,
+            margin: {
+                top: 5,
+                right: 5,
+                bottom: 5,
+                left: 5
+            }
+        };
+        dimensions.bounded_width = dimensions.width - dimensions.margin.left - dimensions.margin.right;
+        dimensions.bounded_height = dimensions.height - dimensions.margin.top - dimensions.margin.bottom;
+        wrapper.selectAll('g').remove();
+        const bounds = wrapper.append('g').style("transform", `translate(${dimensions.margin.left}px, ${dimensions.margin.top}px)`);
+    
+        const yScale = d3.scaleLinear().domain(d3.extent(data_array, yAccessor)).range([dimensions.bounded_height, 0]);
+        const xScale = d3.scaleTime().domain(d3.extent(data_array, xAccessor)).range([0, dimensions.bounded_width]);
+        
+        const lineGenerator = d3.line().x((d) => xScale(xAccessor(d))).y((d)=> yScale(yAccessor(d))).curve(d3.curveBasis);
+
+        const line = bounds.append("path").attr("d", lineGenerator(data_array))
+        .attr("fill", "none").attr("stroke", color).attr("stroke-width", 2);
+    }
+
     const county_first_dose = {}
     const county_full_dose = {}
     function extract_vaccination_data (chosen_month, chosen_day, chosen_year) {
@@ -452,26 +539,37 @@ map.on('load', () => {
             let full_dose = 0;
 
             for (let i = 0; i < data.length; i++){
-                const date_array = data[i]["Report as of"].split('/');
+                const current_date = data[i]["Report as of"];
+                const date_array = current_date.split('/');
                 const month = parseInt(date_array[0]);
                 const day = parseInt(date_array[1]);
                 const year = parseInt(date_array[2]);
 
                 // get total of vaccination record by calculating when day is passed  
                 if (chosen_month === month && chosen_day === day && chosen_year === year){
+                    if (!date_vaccination.includes(current_date)){
+                        date_vaccination.push(current_date);
+                    }
                     county_first_dose[data[i]["County"]] = data[i]["First Dose"];
                     county_full_dose[data[i]["County"]] = data[i]["Series Complete"];
                     first_dose += data[i]["First Dose"];
                     full_dose += data[i]["Series Complete"];
                 }
+            }
 
+            if (first_dose_on_date.length < date_vaccination.length && second_dose_on_date.length < date_vaccination.length){
+                first_dose_on_date.push(first_dose);
+                second_dose_on_date.push(full_dose);
             }
 
             vaccinated.innerHTML = `First Dose Received: ${first_dose.toLocaleString()} <br>
                     Full Dose Received: ${full_dose.toLocaleString()}`;
 
-
         });
+    }
+
+    function generate_stack_chart_vaccination(date_array, data_array1, data_array2){
+        
     }
 
     map.addLayer({

@@ -42,11 +42,27 @@ body {
     text-align: center;
 }
 
+#total-fatality-chart {
+    position: absolute;
+    border: 1px solid orange;
+    background-color: beige;
+    margin-left: 20%;
+    text-align: center;
+}
+
+#total-hospitalization-chart {
+    position: absolute;
+    border: 1px solid orange;
+    background-color: beige;
+    margin-left: 40%;
+    text-align: center;
+}
+
 #patient-age-pie-chart {
     position: absolute;
     background-color: beige;
     border: 1px solid orange;
-    margin-left: 75%;
+    margin-left: 80%;
 }
 
 #data-info{
