@@ -13,7 +13,6 @@
     </head>
 
     <body>
-
         
         <div id='map'></div>
         <div id = 'info-area'>
@@ -47,17 +46,22 @@
         </div>
 
         <div id = "data-area">
-            <svg id="total-positive-chart" width = 25% height = 99%></svg>
-            <svg id="total-fatality-chart" width = 25% height = 99%></svg>
-            <svg id="total-hospitalization-chart" width = 25% height = 99%></svg>
+            <svg id="total-positive-chart" width = 20% height = 99%></svg>
+            <svg id="total-fatality-chart" width = 20% height = 99%></svg>
+            <svg id="total-hospitalization-chart" width = 20% height = 99%></svg>
             <!-- <svg id="total-icu-patient-chart"></svg>
             <svg id="vaccination-stacked-chart" width = 20% height = 99%></svg> -->
-            <svg id="patient-age-pie-chart" width = 25% height = 99%></svg>
+            <svg id="vaccination-line-chart" width = 20% height = 99%></svg>
+            <svg id="patient-age-pie-chart" width = 20% height = 99%></svg>
         </div>
 
         <div id="controller">
             <input id = 'slider' class = 'row' 
                 type = 'range' min = '1' max = '713' step = '1' value = '1'>
+        </div>
+
+        <div id = 'nav'>
+            <p>Display</p>
         </div>
         
         <script src = "./js/scripts.js"></script>

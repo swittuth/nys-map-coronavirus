@@ -562,6 +562,8 @@ map.on('load', () => {
                 second_dose_on_date.push(full_dose);
             }
 
+            generate_line_chart(date_vaccination, first_dose_on_date, '#vaccination-line-chart', 'green');
+
             //generate_stack_chart_vaccination(date_vaccination, first_dose_on_date, second_dose_on_date, '#vaccination-stacked-chart');
 
             vaccinated.innerHTML = `First Dose Received: ${first_dose.toLocaleString()} <br>
@@ -809,7 +811,7 @@ map.on('load', () => {
 
 });
 
-// ADD VACCINATION DATA INTO THE MAP
-// DOUBLE CHECK DATA AGAIN BECAUSE HOSPITALIZATION AND FATALITY CASES ALREADY BEGIN ON MARCH 2ND AND 3RD OF 2020 
-
-// AFTER ADDING VACINATION DATA SHOULD WORK ON INCOPORATING D3.js into the map to display data
+/* data not used to display yet: 
++ second full dose (should be incorporated with stack chart)
++ ICU patients should be incorporated with stack chart for hospital cases
+*/
