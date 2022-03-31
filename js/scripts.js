@@ -1,15 +1,13 @@
 const slider = document.getElementById('slider');
 const title = document.getElementById('title');
 const date = document.getElementById('date');
-const div_data_area = document.getElementById("data-area");
+const div_data_area = document.getElementById("left-data-area");
 
 const total_positive_cases = document.getElementById('total-positive-cases');
-
 const total_fatal_cases = document.getElementById('total-fatal-cases');
-
 const total_hospitalization_cases = document.getElementById('total-hospitalization-cases');
-const total_icu_cases = document.getElementById('total-icu-patients');
-const group_age = document.getElementById('group-age');
+// const total_icu_cases = document.getElementById('total-icu-patients');
+// const group_age = document.getElementById('group-age');
 const vaccinated = document.getElementById('vaccination-record');
 
 const svg_age_group = d3.select("#patient-age-pie-chart");
@@ -59,8 +57,7 @@ const tints_array = ['#ffffff', '#fffdfd', '#fffcfc', '#fefafa', '#fef9f9', '#fe
                     '#713030', '#6f2f2f', '#6d2e2e', '#6a2d2d', '#682c2c', '#652b2b', '#632a2a', '#612929', '#5e2828', '#5c2727', 
                     '#5a2626', '#572525', '#552424', '#532323', '#502222', '#4e2121', '#4c2020', '#491f1f', '#471e1e', '#441d1d', 
                     '#421c1c', '#401b1b', '#3d1a1a', '#3b1919', '#391818', '#361717', '#341616', '#321515', '#2f1414', '#2d1313', 
-                    '#2a1212', '#281111', '#261010', '#230f0f', '#210e0e', '#1f0d0d', '#1c0c0c', '#1a0b0b', '#180a0a']
-console.log(tints_array.length)
+                    '#2a1212', '#281111', '#261010', '#230f0f', '#210e0e', '#1f0d0d', '#1c0c0c', '#1a0b0b', '#180a0a'];
 
 
 // variable to keep track of total positive cases for each county
@@ -111,7 +108,7 @@ map.on('load', () => {
                 let current_month = start_date.getMonth() + 1;
                 let current_day = start_date.getDate();
                 let current_year = start_date.getFullYear();
-                date.innerHTML = `Date: ${start_date.toLocaleString('default', {month: 'long'})} ${current_day}, ${current_year}`;
+                date.innerHTML = `~ ${start_date.toLocaleString('default', {month: 'long'})} ${current_day}, ${current_year} ~`;
                 map.removeLayer('nys-counties-fill-layer');
                 render_positive_map(current_day, current_month, current_year);
                 increase = true;
@@ -177,7 +174,8 @@ map.on('load', () => {
         'source': 'nys-counties',
         'layout': {
             'text-field': ['format', ['upcase',['get', 'ABBREV']], {'font-scale': 0.4}],
-            'text-justify': 'center'
+            'text-justify': 'center',
+
         },
         'paint':{
             'text-color': 'black',
@@ -458,16 +456,16 @@ map.on('load', () => {
             generate_line_chart(date_hospitalization, total_hospitalization_on_date, '#total-hospitalization-chart', 'aqua');
 
             total_hospitalization_cases.innerHTML = `Total Hostpitalization: ${hospitalization_cases.toLocaleString()}`;
-            total_icu_cases.innerHTML = `Total Patients in ICU: ${icu_cases.toLocaleString()}`;
-            group_age.innerHTML = `
-            Patients Age 1 to 4 Years: ${patient_1_4.toLocaleString()} <br>
-            Patients Age 5 to 19 Years: ${patient_5_19.toLocaleString()} <br>
-            Patients Age 20 to 44 Years: ${patient_20_44.toLocaleString()} <br>
-            Patients Age 45 to 54 Years: ${patient_45_54.toLocaleString()} <br>
-            Patients Age 55 to 64 Years: ${patient_55_64.toLocaleString()} <br>
-            Patients Age 65 to 74 Years: ${patient_65_74.toLocaleString()} <br>
-            Patients Age 75 to 84 Years: ${patient_75_84.toLocaleString()} <br>
-            Patients Age Greater Than Years: ${patient_over_85.toLocaleString()} <br>`
+            //total_icu_cases.innerHTML = `Total Patients in ICU: ${icu_cases.toLocaleString()}`;
+            // group_age.innerHTML = `
+            // Patients Age 1 to 4 Years: ${patient_1_4.toLocaleString()} <br>
+            // Patients Age 5 to 19 Years: ${patient_5_19.toLocaleString()} <br>
+            // Patients Age 20 to 44 Years: ${patient_20_44.toLocaleString()} <br>
+            // Patients Age 45 to 54 Years: ${patient_45_54.toLocaleString()} <br>
+            // Patients Age 55 to 64 Years: ${patient_55_64.toLocaleString()} <br>
+            // Patients Age 65 to 74 Years: ${patient_65_74.toLocaleString()} <br>
+            // Patients Age 75 to 84 Years: ${patient_75_84.toLocaleString()} <br>
+            // Patients Age Greater Than Years: ${patient_over_85.toLocaleString()} <br>`
 
             // preparing data for the pie-chart
             const age_group_data = [patient_1_4, patient_5_19, patient_20_44, patient_45_54, patient_55_64, patient_65_74, patient_over_85];
@@ -811,7 +809,22 @@ map.on('load', () => {
 
 });
 
-/* data not used to display yet: 
-+ second full dose (should be incorporated with stack chart)
-+ ICU patients should be incorporated with stack chart for hospital cases
-*/
+
+/* Display pop up for the about section */
+const about_modal_trigger = document.getElementById('about-pop-up');
+const modal = document.getElementById("myModal");
+const span = document.getElementsByClassName("close")[0];
+
+about_modal_trigger.addEventListener('click', () => {
+    modal.style.display = 'block';
+});
+
+span.addEventListener('click', () => {
+    modal.style.display = 'none';
+});
+
+window.addEventListener('click', (event) => {
+    if (event.target == modal) {
+        modal.style.display = 'none';
+    }
+});

@@ -5,9 +5,11 @@
         <meta charset='utf-8' />
         <title>Coronavirus Map in New York State</title>
         <meta name='viewport' content='width=device-width, initial-scale=1' />
+        <link rel="shortcut icon" type='image/png' href='art_asset/coronavirus.png'/>
         <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
         <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.css' rel='stylesheet' />
-        <link href = "./css/styles.css" rel = "stylesheet">
+        <link rel = "stylesheet" type = 'text/css' href = "./css/styles.css">
+        <link rel = "stylesheet" type = 'text/css' href = "./css/style_nav.css"/>
         <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.js"></script>
         <script src="js/d3.min.js"></script>
     </head>
@@ -15,55 +17,49 @@
     <body>
         
         <div id='map'></div>
-        <div id = 'info-area'>
-            
-            <p id='date'>Date: </p>
-            
-            <div id="hospitalization-info">
+        
+        <div id = 'left-data-area'>
 
-                <p id="total-icu-patients">Total Patients in ICU: </p>
-
-                <p id='group-age'>Patients Age 1 to 4 Years: <br>
-                    Patients Age 5 to 19 Years: <br>
-                    Patients Age 20 to 44 Years: <br>
-                    Patients Age 45 to 54 Years: <br>
-                    Patients Age 55 to 64 Years: <br>
-                    Patients Age 65 to 74 Years: <br>
-                    Patients Age 75 to 84 Years: <br>
-                    Patients Age Greater Than Years: <br>
-                </p>
-                
+            <div id="positive-chart-container">
+                <svg id="total-positive-chart" width = 99% height = 100%></svg>
+                <div id="total-positive-case-text-area">
+                    <p id='total-positive-cases'>Total Positive Cases: </p> 
+                </div>
             </div>
+
+            <div id="fatality-chart-container">
+                <svg id="total-fatality-chart" width = 99% height = 100%></svg>
+                <div id="total-fatality-text-area" width = 99% height = 20%>
+                    <p id='total-fatal-cases'>Total Fatal Cases: </p>
+                </div>
+            </div>
+
+
+            
         </div>
 
-        <div id = "data-area">
-
-            <svg id="total-positive-chart" width = 20% height = 99%></svg>
-            <div id="total-positive-case-text-area" width = 20% height = 20%>
-                <p id='total-positive-cases'>Total Positive Cases: </p> 
+        <div id ='right-data-area'>
+            <div id="hospitalization-chart-container">
+                <svg id="total-hospitalization-chart" width = 99%% height = 33.33%></svg>
+                <div id="total-hospitalization-text-area" width = 100% height = 20%>
+                    <p id='total-hospitalization-cases'>Total Hospitalization: </p>
+                </div>
             </div>
 
-            <svg id="total-fatality-chart" width = 20% height = 99%></svg>
-            <div id="total-fatality-text-area" width = 20% height = 20%>
-                <p id='total-fatal-cases'>Total Fatal Cases: </p>
+            <div id="pie-chart-container">
+                <svg id="patient-age-pie-chart" width = 100% height = 33.33%></svg> 
             </div>
 
-            <svg id="total-hospitalization-chart" width = 20% height = 99%></svg>
-            <div id="total-hospitalization-text-area" width = 20% height = 20%>
-                <p id='total-hospitalization-cases'>Total Hospitalization: </p>
+            <div id="vaccinated-chart-container">
+                <svg id="vaccination-line-chart" width = 100% height = 33.33%></svg>
+                <div id="total-vaccinated-text-area" width = 100% height = 20%>
+                    <p id="vaccination-record">
+                        Total Vaccinated: 
+                    </p>
+                </div>
             </div>
 
 
-            <!-- <svg id="total-icu-patient-chart"></svg>
-            <svg id="vaccination-stacked-chart" width = 20% height = 99%></svg> -->
-            <svg id="vaccination-line-chart" width = 20% height = 99%></svg>
-            <div id="total-vaccinated-text-area" width = 20% height = 20%>
-                <p id="vaccination-record">
-                    Total Vaccinated: 
-                </p>
-            </div>
-
-            <svg id="patient-age-pie-chart" width = 20% height = 99%></svg>
         </div>
 
         <div id="controller">
@@ -80,11 +76,46 @@
             </div>
 
             <div id="about-area">
-                <a href="https://github.com/swittuth/nys-map-coronavirus" target="_blank">
-                    
-                </a>
+                <div id="logo-container">
+                    <a href="https://github.com/swittuth/nys-map-coronavirus" target="_blank">
+                        <img id="github-logo" src='art_asset/github_logo.png'/>
+                    </a>
+                </div>
+
+                <p id="about-pop-up">
+                    ABOUT
+                </p>
+
+                <!-- Modal content -->
+                <div id ='myModal' class = 'modal'>
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span class="close">&times;</span>
+                            <h2>ABOUT THE MAP</h2>
+                        </div>
+                        <div class="modal-body">
+                            <p>
+                                The first case of COVID-19 in New York State was confirmed on March 1st of 2020 
+                                and the state quickly became an epicenter of the pandemic. 
+
+                            </p>
+
+                            <p>Some other text...</p>
+                        </div>
+                            <div class="modal-footer">
+                            <h3>Modal Footer</h3>
+                        </div>
+                    </div>
+                </div>
+
             </div>
+
         </div>
+
+        <div id="date-display">
+            <p id='date'></p>
+        </div>
+
         
         <script src = "./js/scripts.js"></script>
     </body>
