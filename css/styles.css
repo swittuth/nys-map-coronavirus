@@ -9,7 +9,7 @@ body {
 
 #map {
     position: absolute;
-    border: 2px solid red;
+    border: 2px solid #242424;
     width: 60%;
     height: 98%;
     margin-left: 20%;
@@ -134,12 +134,11 @@ body {
     bottom: 0;
     height: min-content;
     width: 100%;
-    background-color: darkslategrey;
+    background-color: #3c443e;
     text-align: center;
 }
 
 #slider {
-    cursor: pointer;
     position: relative;
     width: 600px;
 }
@@ -161,4 +160,18 @@ body {
     color: white;
     font-weight: bold;
     text-transform: uppercase;
+}
+
+#pop-up-title {
+    text-align: center;
+    text-transform: uppercase;
+    color: #9e4343;
+}
+
+#pop-up-data {
+    text-align: justify;
+}
+
+.pop-up-text{
+    font-family: Comfortaa;
 }

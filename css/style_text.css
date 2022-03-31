@@ -2,3 +2,7 @@
     color: rgb(243, 65, 0);
     font-weight: bold;
 }
+
+.error-to-fix {
+    font-style: italic;
+}

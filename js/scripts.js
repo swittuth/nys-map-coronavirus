@@ -23,6 +23,7 @@ const map = new mapboxgl.Map({
     zoom: 5.9
 });
 map.scrollZoom.disable();
+map.dragPan.disable();
 
 let hoveredStateId = null;
 
@@ -123,7 +124,7 @@ map.on('load', () => {
                 let current_month = start_date.getMonth() + 1;
                 let current_day = start_date.getDate();
                 let current_year = start_date.getFullYear();
-                date.innerHTML = `Date: ${start_date.toLocaleString('default', {month: 'long'})} ${current_day}, ${current_year}`;
+                date.innerHTML = `~ ${start_date.toLocaleString('default', {month: 'long'})} ${current_day}, ${current_year} ~`;
 
                 map.removeLayer('nys-counties-fill-layer');
                 render_positive_map(current_day, current_month, current_year);
@@ -476,7 +477,7 @@ map.on('load', () => {
             let color = d3.scaleOrdinal(['#5C4B51','#8CBEB2','#F2EBBF','#F3B562','#F06060', '#F26601', '#66CBDF', '#886F61']);
             let pie = d3.pie();
 
-            let arc = d3.arc().innerRadius(0).outerRadius(radius); 
+            let arc = d3.arc().innerRadius(0).outerRadius(radius - 20); 
             let arcs = g.selectAll("arc").data(pie(age_group_data)).enter().append("g").attr("class", "arc");
             arcs.append("path").attr("fill", function(d, i){
                 return color(i);
@@ -749,12 +750,18 @@ map.on('load', () => {
             full_dose_popup = 0;
         }
 
-        let description = `<h1>${county_name}</h1>
-        <h3>Total Cases: ${cases_popup}</h3><br>
-        <h3>Total Hospitalization: ${hospitalize_popup}</h3><br>
-        <h3>Total Fatality: ${fatal_popup}</h3><br>
-        <h3>Total First Dose: ${first_dose_popup}</h3><br>
-        <h3>Total Full Dose: ${full_dose_popup}</h3>`
+        let description = `
+        <div id = "pop-up-title">
+            <h3 class='pop-up-text'>~ ${county_name} ~</h3>
+        </div>
+        <div id = "pop-up-data">
+            <p class='pop-up-text'>Total Cases: ${cases_popup}</p>
+            <p class='pop-up-text'>Total Hospitalization: ${hospitalize_popup}</p>
+            <p class='pop-up-text'>Total Fatality: ${fatal_popup}</p>
+            <p class='pop-up-text'>Total First Dose: ${first_dose_popup}</p>
+            <p class='pop-up-text'>Total Full Dose: ${full_dose_popup}</p>
+        </div>
+        `
 
         
         popup.setLngLat(coordinates).setHTML(description).addTo(map);
