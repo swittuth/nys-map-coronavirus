@@ -85,7 +85,7 @@ a {
 /* Design for modal */
 /* The Modal (background) */
 .modal {
-    display: none; /* Hidden by default */
+    display: block; /* Hidden by default */
     position: fixed; /* Stay in place */
     z-index: 1; /* Sit on top */
     padding-top: 100px; /* Location of the box */
@@ -103,6 +103,7 @@ a {
     position: relative;
     background-color: #fefefe;
     margin: auto;
+    font-size: 15px;
     padding: 0;
     border: 1px solid #888;
     width: 50%;
@@ -164,4 +165,5 @@ a {
     color: white;
     border-bottom-left-radius: 50px;
     border-bottom-right-radius: 50px;
+    text-align: justify;
 }

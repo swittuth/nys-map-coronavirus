@@ -8,8 +8,9 @@
         <link rel="shortcut icon" type='image/png' href='art_asset/coronavirus.png'/>
         <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
         <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.css' rel='stylesheet' />
-        <link rel = "stylesheet" type = 'text/css' href = "./css/styles.css">
+        <link rel = "stylesheet" type = 'text/css' href = "./css/styles.css"/>
         <link rel = "stylesheet" type = 'text/css' href = "./css/style_nav.css"/>
+        <link rel = "stylesheet" type = 'text/css' href = "./css/style_text.css"/>
         <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.js"></script>
         <script src="js/d3.min.js"></script>
     </head>
@@ -95,15 +96,51 @@
                         </div>
                         <div class="modal-body">
                             <p>
-                                The first case of COVID-19 in New York State was confirmed on March 1st of 2020 
+                                The first case of <span class="covid-text">COVID-19</span> in New York State was confirmed on March 1st of 2020 
                                 and the state quickly became an epicenter of the pandemic. 
 
+                                <br>
+                                <br>
+
+                                New York had the highest number of confirmed cases of any state from the start of
+                                the U.S. outbreak until July 22. 
+
+                                <br>
+                                <br>
+
+                                <span class="goal-statement">This map aims to visualize the rapid spread of Coronavirus throughout New York 
+                                    since March 1st, 2020. </span>
+
+                                <br>
+                                <br>
+
+                                To start using the map, you only need to <span class="scroll-text">scroll</span>:
+                                <ul>
+                                    <li><span class="scroll-text">Scroll</span> down to forward timeline</li>
+                                    <li><span class="scroll-text">Scroll</span> up to backtrack timeline</li>
+                                </ul>
+
+
+                                Along with the map, there are <span class="data-text">5 charts</span> visualizing the impact of Coronavirus in New York:
+                                <ul>
+                                    <li>Total Positive Cases (upper-left)</li>
+                                    <li>Total Fatal Cases (bottom-left)</li>
+                                    <li>Total Hospilized Cases (top-right)</li>
+                                    <li>Categories of Patient Age in Hospital (mid-right)</li>
+                                    <li>Total Vaccinated (bottom-right)</li>
+                                </ul>
+                                Note: These charts will automatically appear when <span class="scroll-text">scrolling</span>
+                                
+                                
                             </p>
 
-                            <p>Some other text...</p>
                         </div>
-                            <div class="modal-footer">
-                            <h3>Modal Footer</h3>
+                        <div class="modal-footer">
+                            <h3>Disclaimer: </h3>
+                            <p>This is an ongoing project. There are features to be added such as timeline, interactive data analysis 
+                                of counties within New York State as well as adjustments of dataset and layout of the site needed to be done. 
+                                Hence the current state of the website doesn't reflect fully how the site / map / data chart are intended to be. 
+                            </p>
                         </div>
                     </div>
                 </div>

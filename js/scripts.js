@@ -17,8 +17,8 @@ const map = new mapboxgl.Map({
     container: 'map',
     // https://docs.mapbox.com/api/maps/styles/ - for other styles
     style: 'mapbox://styles/mapbox/dark-v10',
-    center: [-76.021614,43.522570],
-    maxBounds: [[-83.167491,40.268360],[-70.104747,46.601661]],
+    center: [-75.744123,42.920355],
+    maxBounds: [[-82.313948,39.686186],[-69.174299,45.993265]],
     zoom: 5.9
 });
 map.scrollZoom.disable();
