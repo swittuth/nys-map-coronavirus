@@ -1,4 +1,5 @@
 const slider = document.getElementById('slider');
+slider.disabled = true;
 const title = document.getElementById('title');
 const date = document.getElementById('date');
 const div_data_area = document.getElementById("left-data-area");
@@ -152,21 +153,22 @@ map.on('load', () => {
         }
     }, {passive:false});
 
-    slider.addEventListener('input', event => {
-        slider_event = true;
-        wheel_event = false;
-        let start_date = new Date("03/01/2020");
-        let days_to_add = event.target.value - 1;
-        start_date.setDate(start_date.getDate() + days_to_add); // added days to date to render map correctly
-        let current_month = start_date.getMonth() + 1;
-        let current_day = start_date.getDate();
-        let current_year = start_date.getFullYear();
-        date.innerHTML = `Date: ${start_date.toLocaleString('default', {month: 'long'})} ${current_day}, ${current_year}`;
+    // slider.addEventListener('input', event => {
+        
+    //     slider_event = true;
+    //     wheel_event = false;
+    //     let start_date = new Date("03/01/2020");
+    //     let days_to_add = event.target.value - 1;
+    //     start_date.setDate(start_date.getDate() + days_to_add); // added days to date to render map correctly
+    //     let current_month = start_date.getMonth() + 1;
+    //     let current_day = start_date.getDate();
+    //     let current_year = start_date.getFullYear();
+    //     date.innerHTML = `Date: ${start_date.toLocaleString('default', {month: 'long'})} ${current_day}, ${current_year}`;
 
-        map.removeLayer('nys-counties-fill-layer');
-        render_positive_map(current_day, current_month, current_year);
+    //     map.removeLayer('nys-counties-fill-layer');
+    //     render_positive_map(current_day, current_month, current_year);
 
-    });
+    // });
 
     map.addLayer({
         'id': 'nys-counties-name-layer',
@@ -300,12 +302,6 @@ map.on('load', () => {
                     'fill-outline-color': '#ec6464'
                 },
             }, 'nys-counties-name-layer');
-
-            // need to add interaction when an area is clicked on
-            map.on('click', 'nys-counties-fill-layer', e => {
-                
-                
-            });
 
             // reset all events flag value
             wheel_event = false;
