@@ -13,7 +13,16 @@ def main():
 
         line = tint_file.readline()
 
-    print(len(tint_array))
+    for i in range(0, len(tint_array)):
+        if i == 0:
+            print('[', end='')
+        print(f"'{tint_array[i]}'", end=', ')
+        if i == (len(tint_array) - 1):
+            print(']')
+        if (i - 1) % 10 == 0:
+            print('\n', end='')
+
+
 
 
 if __name__ == '__main__':
