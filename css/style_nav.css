@@ -163,7 +163,12 @@ a {
     padding: 2px 16px;
     background-color: #e76262;
     color: white;
-    border-bottom-left-radius: 50px;
-    border-bottom-right-radius: 50px;
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
     text-align: justify;
+    font-size: 10px;
+}
+
+.browser-type {
+    text-transform: uppercase;
 }
