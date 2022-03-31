@@ -19,9 +19,9 @@ const map = new mapboxgl.Map({
     container: 'map',
     // https://docs.mapbox.com/api/maps/styles/ - for other styles
     style: 'mapbox://styles/mapbox/dark-v10',
-    center: [-75.796266,43.425341],
-    maxBounds: [[-82.712159,40.170840],[-68.880372,46.513840]],
-    zoom: 5.7
+    center: [-76.021614,43.522570],
+    maxBounds: [[-83.167491,40.268360],[-70.104747,46.601661]],
+    zoom: 5.9
 });
 map.scrollZoom.disable();
 
@@ -227,11 +227,11 @@ map.on('load', () => {
                             total_number_cases -= data[i + 1]["New Positives"];
                         }
 
-                        total_positive_cases.innerHTML = 'Cumulative Positive Cases: ' + total_number_cases.toLocaleString();
+                        total_positive_cases.innerHTML = 'Total Positive Cases: ' + total_number_cases.toLocaleString();
                     }
                     else if (slider_event){
                         total_number_cases += total_county_positive;
-                        total_positive_cases.innerHTML = 'Cumulative Positive Cases: ' + total_number_cases.toLocaleString();
+                        total_positive_cases.innerHTML = 'Total Positive Cases: ' + total_number_cases.toLocaleString();
                     };
 
                 }
@@ -402,7 +402,7 @@ map.on('load', () => {
             }
 
             generate_line_chart(date_fatal, total_fatal_on_date, '#total-fatality-chart', 'red');
-            total_fatal_cases.innerHTML = `Total Fatality: ${current_total_fatal_cases.toLocaleString()}`;
+            total_fatal_cases.innerHTML = `Total Fatal Cases: ${current_total_fatal_cases.toLocaleString()}`;
         });
     }
     // end of extract data for fatal-cases on map
@@ -566,8 +566,7 @@ map.on('load', () => {
 
             //generate_stack_chart_vaccination(date_vaccination, first_dose_on_date, second_dose_on_date, '#vaccination-stacked-chart');
 
-            vaccinated.innerHTML = `First Dose Received: ${first_dose.toLocaleString()} <br>
-                    Full Dose Received: ${full_dose.toLocaleString()}`;
+            vaccinated.innerHTML = `Total Vaccinated: ${first_dose.toLocaleString()}`;
 
         });
     }

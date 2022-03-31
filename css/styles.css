@@ -11,12 +11,18 @@ body {
     position: absolute;
     width: 100%;
     height: 40px;
-    background-color: darkslategray;
-    border: 1px solid green;
+    background-color: #3c443e;
+    border: 3px solid #242424;
+    border-radius: 5px;
+}
+
+#virus-logo{
+    position: absolute;
+    padding-left: 5px;
 }
 
 #title {
-    margin-top: 40px;
+    color: #f0f4ff;
 }
 
 #map {
@@ -49,10 +55,42 @@ body {
     margin-top: 40px;
 }
 
+#total-fatal-cases, #total-hospitalization-cases, #total-positive-cases, #vaccination-record {
+    font-size: 8px;
+}
+
+
+/* for text on chart */
+#total-positive-case-text-area, #total-fatality-text-area, 
+#total-hospitalization-text-area, #total-vaccinated-text-area{
+    position: absolute;
+    padding-left: 4px;
+    height: min-content;
+}
+
+#total-positive-case-text-area {
+    margin-left: 0;
+}
+
+
+#total-fatality-text-area {
+    margin-left: 20%;
+}
+
+
+#total-hospitalization-text-area {
+    margin-left: 40%;
+}
+
+#total-vaccinated-text-area {
+    margin-left: 60%;
+}
+
+
 #total-positive-chart{
     position: absolute;
     border: 1px solid darkgrey;
-    background-color: rgba(46, 45, 45, 0.8);
+    background-color: #f0f4ff;
     margin-left: 0%;
     text-align: center;
 }
@@ -60,7 +98,7 @@ body {
 #total-fatality-chart {
     position: absolute;
     border: 1px solid darkgrey;
-    background-color: rgba(46, 45, 45, 0.8);
+    background-color: #f0f4ff;
     margin-left: 20%;
     text-align: center;
 }
@@ -68,7 +106,7 @@ body {
 #total-hospitalization-chart {
     position: absolute;
     border: 1px solid darkgrey;
-    background-color: rgba(46, 45, 45, 0.8);
+    background-color: #f0f4ff;
     margin-left: 40%;
     text-align: center;
 }
@@ -83,14 +121,14 @@ body {
 
 #vaccination-line-chart {
     position: absolute;
-    background-color: rgba(46, 45, 45, 0.8);
+    background-color: #f0f4ff;
     border: 1px solid darkgrey;
     margin-left: 60%;
 }
 
 #patient-age-pie-chart {
     position: absolute;
-    background-color: rgba(46, 45, 45, 0.8);
+    background-color: #f0f4ff;
     border: 1px solid darkgrey;
     margin-left: 80%;
 }
@@ -123,5 +161,4 @@ body {
 #title {
     position: relative;
     margin-left: 50px;
-    
 }
