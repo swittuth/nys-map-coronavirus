@@ -18,11 +18,13 @@ body {
 #left-data-area {
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    flex-flow: wrap;
+    align-items: stretch;
     position: absolute;
     background-color: #f0f4ff;
     width: 20%;
     height: 96%;
-    align-items: center;
 }
 
 #right-data-area {
@@ -38,10 +40,13 @@ body {
 }
 
 #positive-chart-container {
+    flex-shrink: 1;
+    height: min-content;
     height: 50%;
 }
 
 #fatality-chart-container {
+    flex-shrink: 1;
     height: 50%;
 }
 
@@ -50,12 +55,14 @@ body {
 }
 
 #hospitalization-chart-container {
+    flex-shrink: 1;
     margin-top: 40px;
     height: min-content;
     width: 100%;
 }
 
 #vaccinated-chart-container {
+    flex-shrink: 1;
     width: 100%;
     height: 30%;
     float: left;
@@ -64,6 +71,7 @@ body {
 }
 
 #pie-chart-container {
+    flex-shrink: 1;
     width: 100%;
     height: 10%;
 }
